@@ -1,25 +1,24 @@
 package gameengine.threed.geometry;
 
-import gameengine.utilities.ExtraMath;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 
 import static gameengine.utilities.ExtraMath.max;
 import static gameengine.utilities.ExtraMath.min;
 
-public record Triangle3D(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3,
-                         Vector3D v0, Vector3D v1,
+public record Triangle3D(Vector4D vertex1, Vector4D vertex2, Vector4D vertex3,
+                         Vector4D v0, Vector4D v1,
                          double dot00, double dot01, double dot11,
                          double invDenom,
-                         Vector3D center, double range) {
+                         Vector4D center, double range) {
     public Triangle3D(Triangle3D parent) {
         this(parent.vertex1, parent.vertex2, parent.vertex3, parent.v0,
                 parent.v1, parent.dot00, parent.dot01, parent.dot11,
                 parent.invDenom, parent.center, parent.range);
     }
 
-    public static Triangle3D computeValues(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3) {
-        Vector3D v0 = vertex2.subtract(vertex1);
-        Vector3D v1 = vertex3.subtract(vertex1);
+    public static Triangle3D computeValues(Vector4D vertex1, Vector4D vertex2, Vector4D vertex3) {
+        Vector4D v0 = vertex2.subtract(vertex1);
+        Vector4D v1 = vertex3.subtract(vertex1);
         double dot00 = v0.dotSelf();
         double dot01 = v0.dotProduct(v1);
         double dot11 = v1.dotSelf();
@@ -29,7 +28,7 @@ public record Triangle3D(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3,
                 v0, v1,
                 dot00, dot01, dot11,
                 (dot00 * dot11 - dot01 * dot01),
-                Vector3D.average(vertex1, vertex2, vertex3),
+                Vector4D.average(vertex1, vertex2, vertex3),
                 Math.max(vertex1.distance(vertex2), vertex1.distance(vertex3)));
     }
 
@@ -56,7 +55,7 @@ public record Triangle3D(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3,
         return max(vertex1.getZ(), vertex2.getZ(), vertex3.getZ());
     }
 
-    public Vector3D normal() {
+    public Vector4D normal() {
         return vertex1.normal(vertex2, vertex3);
     }
 }

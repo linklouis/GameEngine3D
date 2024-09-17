@@ -2,7 +2,7 @@ package gameengine.threed.graphics.raytraceing.textures;
 
 import gameengine.threed.graphics.raytraceing.LightRay;
 import gameengine.threed.graphics.raytraceing.Reflection;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 import javafx.scene.paint.Color;
 
 /**
@@ -19,7 +19,7 @@ public class BaseTexture extends RayTracingTexture {
      * @param color The color of the surface
      * @param isLightSource Whether the surface emits light
      */
-    public BaseTexture(final Color color, double emissionStrength, Vector3D emissionColor) {
+    public BaseTexture(final Color color, double emissionStrength, Vector4D emissionColor) {
         super(color, emissionStrength, emissionColor);
     }
 
@@ -28,7 +28,7 @@ public class BaseTexture extends RayTracingTexture {
     }
 
     public BaseTexture(final Color color, double emissionStrength) {
-        super(color, emissionStrength, new Vector3D(1));
+        super(color, emissionStrength, new Vector4D(1));
     }
 
     /**
@@ -42,7 +42,7 @@ public class BaseTexture extends RayTracingTexture {
      */
     @Override
     public Reflection reflection(final LightRay lightRay,
-                                 final Vector3D surfaceNormal) {
+                                 final Vector4D surfaceNormal) {
         return new Reflection(
                 scatterRay(surfaceNormal),
                 defaultColorUpdate(lightRay.getColor()));

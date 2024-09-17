@@ -7,7 +7,7 @@ import gameengine.threed.graphics.raytraceing.LightRay;
 import gameengine.threed.graphics.raytraceing.Reflection;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
 import gameengine.threed.geometry.RayIntersectable;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public abstract class RayTraceable extends GraphicsObject3D implements RayInters
      * Utilities:
      */
 
-    public abstract Vector3D[] getVertices();
+    public abstract Vector4D[] getVertices();
 
     public RayTracingTexture getTexture() {
         return texture;
@@ -64,8 +64,8 @@ public abstract class RayTraceable extends GraphicsObject3D implements RayInters
         return getTexture().getColor();
     }
 
-    public Vector3D colorVector() {
-        return new Vector3D(getTexture().getColor());
+    public Vector4D colorVector() {
+        return new Vector4D(getTexture().getColor());
     }
     public void setColor(Color color) {
         getTexture().setColor(color);

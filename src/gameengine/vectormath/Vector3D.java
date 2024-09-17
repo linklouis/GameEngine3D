@@ -1,7 +1,6 @@
 package gameengine.vectormath;
 
 import gameengine.utilities.ExtraMath;
-import gameengine.utilities.Random;
 import javafx.scene.paint.Color;
 
 import java.math.BigDecimal;
@@ -293,7 +292,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
     }
 
     /**
-     * @return a Vector3D with only the component with the largest value
+     * @return a Vector4D with only the component with the largest value
      * preserved, and all others set to 0.
      */
     @Override
@@ -306,7 +305,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
     }
 
     /**
-     * @return a Vector3D with only the component with the smallest value
+     * @return a Vector4D with only the component with the smallest value
      * preserved, and all others set to 0.
      */
     @Override
@@ -607,7 +606,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
     }
 
     public String toString() {
-        return "Vector3D(" + x + ", " + y + ", " + z + ")";
+        return "Vector4D(" + x + ", " + y + ", " + z + ")";
     }
 
     /**
@@ -660,7 +659,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
 //            this.seed = seed;
 //        }
 //
-//        public FastGaussian(Vector3D seed) {
+//        public FastGaussian(Vector4D seed) {
 //            setSeed(seed);
 //        }
 //
@@ -676,7 +675,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
 //            this.seed = seed;
 //        }
 //
-//        public void setSeed(Vector3D seed) {
+//        public void setSeed(Vector4D seed) {
 //            this.seed = (long) ((seed.getX() + seed.getY()) * seed.getZ());
 //        }
 //    }

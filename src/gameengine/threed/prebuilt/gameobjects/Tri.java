@@ -4,16 +4,16 @@ import gameengine.skeletons.Modifier;
 import gameengine.threed.graphics.Visual3D;
 import gameengine.threed.graphics.raytraceing.objectgraphics.TriGraphics;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Tri extends Polygon {
 
-    public Tri(Vector3D point1, Vector3D point2, Vector3D point3, RayTracingTexture texture) {
+    public Tri(Vector4D point1, Vector4D point2, Vector4D point3, RayTracingTexture texture) {
         super(new TriGraphics());
-        get(TriGraphics.class).instantiate(this, new Vector3D[] { point1, point2, point3 }, texture);
+        get(TriGraphics.class).instantiate(this, new Vector4D[] { point1, point2, point3 }, texture);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class Tri extends Polygon {
     }
 
     @Override
-    public Vector3D[] getVertices() {
+    public Vector4D[] getVertices() {
         return get(TriGraphics.class).getVertices();
     }
 

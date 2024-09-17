@@ -4,7 +4,7 @@ import gameengine.skeletons.Modifier;
 import gameengine.threed.prebuilt.objectmovement.InPlane3D;
 import gameengine.utilities.ArgumentContext;
 import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -51,7 +51,7 @@ public class SphereCollider extends Collider3D<SphereCollider> {
     }
 
     @Override
-    public boolean contains(Vector3D point) {
+    public boolean contains(Vector4D point) {
         return Math.abs(point.subtract(getCenter()).magnitude()) <= getRadius();
     }
 
@@ -86,7 +86,7 @@ public class SphereCollider extends Collider3D<SphereCollider> {
     }
 
     @Override
-    public Vector3D getCenter() {
+    public Vector4D getCenter() {
         return getFromParent(InPlane3D.class).getLocation();
     }
 

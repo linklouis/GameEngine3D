@@ -1,6 +1,6 @@
 package gameengine.threed.geometry;
 
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 
 public interface RayIntersectable extends VectorLineIntersectable {
     /**
@@ -24,7 +24,7 @@ public interface RayIntersectable extends VectorLineIntersectable {
 
     double getRange();
 
-    default double closestDistTo(Vector3D point) {
+    default double closestDistTo(Vector4D point) {
 //        System.out.println(getCenter().distance(point) + ", " + getRange());
         return getCenter().distance(point) - getRange();
     }
@@ -36,7 +36,7 @@ public interface RayIntersectable extends VectorLineIntersectable {
      * @param perspective
      * @return
      */
-    Vector3D surfaceNormal(Ray perspective);
+    Vector4D surfaceNormal(Ray perspective);
 
     default boolean willCollide(VectorLine3D line) {
         return distanceToCollide((Ray) line, Double.MAX_VALUE) > 0;

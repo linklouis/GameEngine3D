@@ -10,7 +10,7 @@ import gameengine.twod.prebuilt.objectmovement.collisions.PhysicsCollisionHandle
 import gameengine.twod.prebuilt.objectmovement.physics.PhysicsObject2D;
 import gameengine.utilities.ArgumentContext;
 import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -116,7 +116,7 @@ public abstract class Collider3D<ColliderType extends Collider3D<ColliderType>> 
 
     public abstract boolean isColliding(ColliderType coll);
 
-    public abstract boolean contains(Vector3D point);
+    public abstract boolean contains(Vector4D point);
 
     public abstract double minX();
 
@@ -130,7 +130,7 @@ public abstract class Collider3D<ColliderType extends Collider3D<ColliderType>> 
 
     public abstract double maxZ();
 
-    public abstract Vector3D getCenter();
+    public abstract Vector4D getCenter();
 
     public abstract Class<ColliderType> getColliderClass();
 

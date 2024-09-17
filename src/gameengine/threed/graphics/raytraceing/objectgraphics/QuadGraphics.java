@@ -7,7 +7,7 @@ import gameengine.threed.geometry.Rect3D;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
 import gameengine.utilities.ArgumentContext;
 import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class QuadGraphics extends RayTraceable {
         return new ArgumentContext[] {
                 new ArgumentContext(
                         new ModifierInstantiateParameter<>(
-                                "vertices", Vector3D[].class,
+                                "vertices", Vector4D[].class,
                                 this::setVertices),
                         new ModifierInstantiateParameter<>(
                                 "texture", RayTracingTexture.class,
@@ -61,7 +61,7 @@ public class QuadGraphics extends RayTraceable {
      * @return
      */
     @Override
-    public Vector3D surfaceNormal(Ray perspective) {
+    public Vector4D surfaceNormal(Ray perspective) {
         if (rect.normal().dotProduct(perspective.getDirection()) > 0) {
             return rect.normal().scalarMultiply(-1);
         }
@@ -95,32 +95,32 @@ public class QuadGraphics extends RayTraceable {
      */
 
     @Override
-    public Vector3D[] getVertices() {
+    public Vector4D[] getVertices() {
         return rect.vertices();
     }
 
     @Override
-    public Vector3D getCenter() {
+    public Vector4D getCenter() {
         return rect.vertex1();
     }
 
-    public Vector3D getVertex1() {
+    public Vector4D getVertex1() {
         return rect.vertex1();
     }
 
-    public Vector3D getVertex2() {
+    public Vector4D getVertex2() {
         return rect.vertex2();
     }
 
-    public Vector3D getVertex3() {
+    public Vector4D getVertex3() {
         return rect.vertex3();
     }
 
-    public Vector3D getVertex4() {
+    public Vector4D getVertex4() {
         return rect.vertex4();
     }
 
-    private void setVertices(Vector3D[] vertices) {
+    private void setVertices(Vector4D[] vertices) {
         rect = new Rect3D(vertices[0], vertices[1], vertices[2], vertices[3]);
     }
 

@@ -3,7 +3,7 @@ package gameengine.threed.prebuilt.gameobjects;
 import gameengine.skeletons.Modifier;
 import gameengine.utilities.ArgumentContext;
 import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Mesh<PolyType extends  Polygon> extends Modifier {
     private PolyType[] polygons;
-    private Vector3D[] vertices;
+    private Vector4D[] vertices;
     private final PolyType[] validPolyArray;
 
 
@@ -37,7 +37,7 @@ public class Mesh<PolyType extends  Polygon> extends Modifier {
                                 "Polygons", Polygon[].class,
                                 this::setPolygons),
                         new ModifierInstantiateParameter<>(
-                                "Vertices", Vector3D[].class,
+                                "Vertices", Vector4D[].class,
                                 this::setVertices)
                 )
         };
@@ -48,12 +48,12 @@ public class Mesh<PolyType extends  Polygon> extends Modifier {
      * Functionality:
      */
 
-    public static Vector3D[] getVertices(Polygon[] polygons) {
-        ArrayList<Vector3D> newVertices = new ArrayList<>();
+    public static Vector4D[] getVertices(Polygon[] polygons) {
+        ArrayList<Vector4D> newVertices = new ArrayList<>();
         for (Polygon poly : polygons) {
-            for (Vector3D vertex : poly.getVertices()) {
+            for (Vector4D vertex : poly.getVertices()) {
                 boolean alreadyContained = false;
-                for (Vector3D other : newVertices) {
+                for (Vector4D other : newVertices) {
                     if (other.equals(vertex)) {
                         alreadyContained = true;
                         break;
@@ -66,7 +66,7 @@ public class Mesh<PolyType extends  Polygon> extends Modifier {
             }
         }
 
-        return newVertices.toArray(new Vector3D[0]);
+        return newVertices.toArray(new Vector4D[0]);
     }
 
 
@@ -91,15 +91,15 @@ public class Mesh<PolyType extends  Polygon> extends Modifier {
 //        vertices = getVertices(polygons);
 //    }
 
-    public Vector3D[] getVertices() {
+    public Vector4D[] getVertices() {
         return vertices;
     }
 
-    public void setVertices(Vector3D[] vertices) {
+    public void setVertices(Vector4D[] vertices) {
         this.vertices = vertices;
     }
 
-    public void setMesh(Vector3D[] vertices, PolyType[] polygons) {
+    public void setMesh(Vector4D[] vertices, PolyType[] polygons) {
         this.vertices = vertices;
         this.polygons = polygons;
     }

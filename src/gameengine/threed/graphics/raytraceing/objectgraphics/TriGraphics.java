@@ -7,13 +7,13 @@ import gameengine.threed.geometry.Triangle3D;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
 import gameengine.utilities.ArgumentContext;
 import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 
 import java.util.List;
 
 public class TriGraphics extends RayTraceable {
     private Triangle3D triData;
-    private Vector3D normal;
+    private Vector4D normal;
 
 
     /*
@@ -30,7 +30,7 @@ public class TriGraphics extends RayTraceable {
         return new ArgumentContext[] {
                 new ArgumentContext(
                         new ModifierInstantiateParameter<>(
-                                "vertices", Vector3D[].class,
+                                "vertices", Vector4D[].class,
                                 this::setVertices),
                         new ModifierInstantiateParameter<>(
                                 "texture", RayTracingTexture.class,
@@ -54,7 +54,7 @@ public class TriGraphics extends RayTraceable {
      */
 
     @Override
-    public Vector3D surfaceNormal(Ray perspective) {
+    public Vector4D surfaceNormal(Ray perspective) {
         if (normal.dotProduct(perspective.getDirection()) > 0) {
             return normal.scalarMultiply(-1);
         }
@@ -90,7 +90,7 @@ public class TriGraphics extends RayTraceable {
      *
      * @return True if the point is within the vertices, otherwise false.
      */
-    public boolean inRange(Vector3D point) {
+    public boolean inRange(Vector4D point) {
         // ChatGPT
         double dot02 = triData.v0().dotWithSubtracted(point, triData.vertex1());
         double dot12 = triData.v1().dotWithSubtracted(point, triData.vertex1());
@@ -109,28 +109,28 @@ public class TriGraphics extends RayTraceable {
      */
 
     @Override
-    public Vector3D[] getVertices() {
-        return new Vector3D[] { triData.vertex1(), triData.vertex2(), triData.vertex3() };
+    public Vector4D[] getVertices() {
+        return new Vector4D[] { triData.vertex1(), triData.vertex2(), triData.vertex3() };
     }
 
     @Override
-    public Vector3D getCenter() {
+    public Vector4D getCenter() {
         return triData.center();
     }
 
-    public Vector3D getVertex1() {
+    public Vector4D getVertex1() {
         return triData.vertex1();
     }
 
-    public Vector3D getVertex2() {
+    public Vector4D getVertex2() {
         return triData.vertex2();
     }
 
-    public Vector3D getVertex3() {
+    public Vector4D getVertex3() {
         return triData.vertex3();
     }
 
-    protected void setVertices(Vector3D[] vertices) {
+    protected void setVertices(Vector4D[] vertices) {
         triData = Triangle3D.computeValues(vertices[0], vertices[1], vertices[2]);
         normal = triData.normal();
     }

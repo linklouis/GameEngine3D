@@ -3,7 +3,7 @@ package gameengine.threed.graphics.raytraceing.textures;
 import gameengine.threed.graphics.raytraceing.LightRay;
 import gameengine.threed.graphics.raytraceing.Reflection;
 import gameengine.utilities.ExtraMath;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 import javafx.scene.paint.Color;
 
 public class Mirrored extends RayTracingTexture {
@@ -30,7 +30,7 @@ public class Mirrored extends RayTracingTexture {
      */
     public Mirrored(final Color color,
                     final double emissionStrength,
-                    final Vector3D emissionColor,
+                    final Vector4D emissionColor,
                     final double reflectivity) {
         super(color, emissionStrength, emissionColor);
         this.reflectivity = reflectivity;
@@ -49,14 +49,14 @@ public class Mirrored extends RayTracingTexture {
     public Mirrored(final Color color,
                     final double emissionStrength,
                     final double reflectivity) {
-        super(color, emissionStrength, new Vector3D(1));
+        super(color, emissionStrength, new Vector4D(1));
         this.reflectivity = reflectivity;
         specularProbability = 0;
     }
 
     public Mirrored(final Color color,
                     final double emissionStrength,
-                    final Vector3D emissionColor,
+                    final Vector4D emissionColor,
                     final double reflectivity,
                     final double specularProbability) {
         super(color, emissionStrength, emissionColor);
@@ -78,7 +78,7 @@ public class Mirrored extends RayTracingTexture {
                     final double emissionStrength,
                     final double reflectivity,
                     final double specularProbability) {
-        super(color, emissionStrength, new Vector3D(1));
+        super(color, emissionStrength, new Vector4D(1));
         this.reflectivity = reflectivity;
         this.specularProbability = specularProbability;
     }
@@ -96,11 +96,11 @@ public class Mirrored extends RayTracingTexture {
      * @param surfaceNormal The normal vector to the surface where the lightRay is
      *                      hitting.
      * @return The direction that the light lightRay should bounce as a
-     *          {@link Vector3D}.
+     *          {@link Vector4D}.
      */
     @Override
     public Reflection reflection(final LightRay lightRay,
-                                 final Vector3D surfaceNormal) {
+                                 final Vector4D surfaceNormal) {
         if (ExtraMath.selectRandom(() -> true, () -> false, specularProbability)) {
             return new Reflection(
                     reflectRay(lightRay.getDirection(), surfaceNormal),

@@ -5,7 +5,7 @@ import gameengine.skeletons.Modifier;
 import gameengine.threed.drivers.GameDriver3D;
 import gameengine.threed.prebuilt.gameobjects.Mesh;
 import gameengine.threed.prebuilt.gameobjects.Polygon;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 
 public abstract class PolyObject<PolyType extends Polygon> extends GameObject {
 
@@ -18,7 +18,7 @@ public abstract class PolyObject<PolyType extends Polygon> extends GameObject {
         }
     }
 
-    public PolyObject(Vector3D[] vertices, Modifier... modifiers) {
+    public PolyObject(Vector4D[] vertices, Modifier... modifiers) {
         super(modifiers);
         try {
             get(Mesh.class).instantiate(this, createMesh(vertices), vertices);
@@ -33,5 +33,5 @@ public abstract class PolyObject<PolyType extends Polygon> extends GameObject {
         }
     }
 
-    protected abstract PolyType[] createMesh(Vector3D[] vertices);
+    protected abstract PolyType[] createMesh(Vector4D[] vertices);
 }

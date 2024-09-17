@@ -3,7 +3,7 @@ package gameengine.threed.graphics.raytraceing;
 import gameengine.threed.geometry.Ray;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayIntersectableList;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayTraceable;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 import javafx.scene.paint.Color;
 
 /**
@@ -14,8 +14,8 @@ import javafx.scene.paint.Color;
  * @since 1.0
  */
 public class LightRay extends Ray {
-    private Vector3D color;
-    private Vector3D incomingLight = new Vector3D();
+    private Vector4D color;
+    private Vector4D incomingLight = new Vector4D();
 
     /**
      * Creates a new {@code LightRay}.
@@ -23,30 +23,30 @@ public class LightRay extends Ray {
      * @param startPosition The initial position of the {@code LightRay}.
      * @param direction The direction the {@code LightRay} will move in.
      */
-    public LightRay(final Vector3D startPosition, final Vector3D direction) {
+    public LightRay(final Vector4D startPosition, final Vector4D direction) {
         super(startPosition, direction);
-        color = new Vector3D(1);
+        color = new Vector4D(1);
     }
 
-    public LightRay(final Vector3D startPosition, final Vector3D direction, final Vector3D color) {
+    public LightRay(final Vector4D startPosition, final Vector4D direction, final Vector4D color) {
         super(startPosition, direction);
         this.color = color;
     }
 
-    public LightRay(final Vector3D startPosition, final Vector3D direction, final Vector3D color, final Vector3D incomingLight) {
+    public LightRay(final Vector4D startPosition, final Vector4D direction, final Vector4D color, final Vector4D incomingLight) {
         super(startPosition, direction);
         this.color = color;
         this.incomingLight = incomingLight;
     }
 
-    public LightRay(final Vector3D startPosition, final Vector3D direction, final Color color) {
+    public LightRay(final Vector4D startPosition, final Vector4D direction, final Color color) {
         super(startPosition, direction);
-        this.color = new Vector3D(color);
+        this.color = new Vector4D(color);
     }
 
-    public LightRay(final Vector3D startPosition, final Reflection reflection) {
+    public LightRay(final Vector4D startPosition, final Reflection reflection) {
         super(startPosition, reflection.direction());
-        this.color = new Vector3D(reflection.color());
+        this.color = new Vector4D(reflection.color());
     }
 
 
@@ -54,15 +54,15 @@ public class LightRay extends Ray {
      * Functionality:
      */
 
-    private static Vector3D sunPos = new Vector3D(2, 0,3).unitVector();
-    public static Vector3D getSkyColor(Vector3D dir) {
+    private static Vector4D sunPos = new Vector4D(2, 0,3).unitVector();
+    public static Vector4D getSkyColor(Vector4D dir) {
 //        if (dir.angleInDegreesWith(sunPos) < 4) {
-//            return new Vector3D(Color.LIGHTYELLOW).scalarMultiply(3 * Math.exp(-Math.abs(dir.dotProduct(sunPos))));
+//            return new Vector4D(Color.LIGHTYELLOW).scalarMultiply(3 * Math.exp(-Math.abs(dir.dotProduct(sunPos))));
 //        }
-        return new Vector3D(Color.SKYBLUE).scalarMultiply(0.3 * (dir.dotProduct(sunPos) + 0.7)).add(new Vector3D(Color.LIGHTYELLOW).scalarMultiply(3 / (1 + Math.pow(dir.angleInDegreesWith(sunPos), 2))));//.scalarMultiply(3 * Math.exp(-Math.abs(dir.angleInDegreesWith(sunPos) / 2))));
+        return new Vector4D(Color.SKYBLUE).scalarMultiply(0.3 * (dir.dotProduct(sunPos) + 0.7)).add(new Vector4D(Color.LIGHTYELLOW).scalarMultiply(3 / (1 + Math.pow(dir.angleInDegreesWith(sunPos), 2))));//.scalarMultiply(3 * Math.exp(-Math.abs(dir.angleInDegreesWith(sunPos) / 2))));
     }
 
-    public Vector3D getColor(final int maxBounces,
+    public Vector4D getColor(final int maxBounces,
                              final RayIntersectableList objectsInField, int startingBounce) {
         RayTraceable collision;
 
@@ -109,12 +109,12 @@ public class LightRay extends Ray {
     @Override
     public LightRay getReflected(RayTraceable collider) {
         Reflection reflectionDetails = collider.reflection(this);
-        return new LightRay(new Vector3D(position), reflectionDetails.direction(),
+        return new LightRay(new Vector4D(position), reflectionDetails.direction(),
                 reflectionDetails.color(),
                 updatedIncomingLight(collider.getTexture().getEmission()));
     }
 
-    private Vector3D updatedIncomingLight(Vector3D emission) {
+    private Vector4D updatedIncomingLight(Vector4D emission) {
         return incomingLight.add(color.multiplyAcross(emission));
     }
 
@@ -123,11 +123,11 @@ public class LightRay extends Ray {
      * Utilities:
      */
 
-    public Vector3D getColor() {
+    public Vector4D getColor() {
         return color;
     }
 
-    public Vector3D getIncomingLight() {
+    public Vector4D getIncomingLight() {
         return incomingLight;
     }
 }

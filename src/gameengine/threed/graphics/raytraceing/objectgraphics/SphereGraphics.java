@@ -7,7 +7,7 @@ import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
 import gameengine.threed.prebuilt.objectmovement.InPlane3D;
 import gameengine.utilities.ArgumentContext;
 import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +39,8 @@ public class SphereGraphics extends RayTraceable {
     }
 
     @Override
-    public Vector3D[] getVertices() {
-        return new Vector3D[0];
+    public Vector4D[] getVertices() {
+        return new Vector4D[0];
     }
 
     @Override
@@ -73,7 +73,7 @@ public class SphereGraphics extends RayTraceable {
      */
 
     @Override
-    public Vector3D surfaceNormal(Ray perspective) {
+    public Vector4D surfaceNormal(Ray perspective) {
         return perspective.getPosition().subtract(getCenter()).unitVector();
     }
 
@@ -216,11 +216,11 @@ public class SphereGraphics extends RayTraceable {
     }
 
     @Override
-    public Vector3D getCenter() {
+    public Vector4D getCenter() {
         return position.getLocation();
     }
 
-    public boolean contains(Vector3D point) {
+    public boolean contains(Vector4D point) {
         return point.distance(getCenter()) <= radius;
     }
 

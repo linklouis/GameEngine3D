@@ -4,13 +4,13 @@ import gameengine.skeletons.GameObject;
 import gameengine.skeletons.Modifier;
 import gameengine.utilities.ArgumentContext;
 import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InPlane3D extends Modifier {
-    private Vector3D location = new Vector3D(0);
+    private Vector4D location = new Vector4D(0);
 
     public InPlane3D() {
         super();
@@ -39,7 +39,7 @@ public class InPlane3D extends Modifier {
         return new ArgumentContext[] {
                 new ArgumentContext(
                         new ModifierInstantiateParameter<>(
-                                "location", Vector3D.class, this::setLocation)
+                                "location", Vector4D.class, this::setLocation)
                 ),
                 new ArgumentContext(
                         new ModifierInstantiateParameter<>(
@@ -56,18 +56,18 @@ public class InPlane3D extends Modifier {
     }
 
     public void setLocation(double x, double y, double z) {
-        location = new Vector3D(x, y, z);
+        location = new Vector4D(x, y, z);
     }
 
-    public void setLocation(Vector3D newLocation) {
+    public void setLocation(Vector4D newLocation) {
         location = newLocation;
     }
 
-    public void updateLocation(Vector3D displacement) {
+    public void updateLocation(Vector4D displacement) {
         location = location.add(displacement);
     }
 
-    public Vector3D getLocation() {
+    public Vector4D getLocation() {
         return location;
     }
 
@@ -95,7 +95,7 @@ public class InPlane3D extends Modifier {
         setLocation(getLocation().getX(), getLocation().getY(), z);
     }
 
-    public double distance(Vector3D point) {
+    public double distance(Vector4D point) {
         return getLocation().distance(point);
     }
 

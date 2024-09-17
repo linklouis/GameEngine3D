@@ -4,7 +4,7 @@ import gameengine.skeletons.GameObject;
 import gameengine.skeletons.Modifier;
 import gameengine.threed.graphics.Visual3D;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayTraceable;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +21,7 @@ public abstract class Polygon extends GameObject {
         get(Visual3D.class).instantiate(this, graphics);
     }
 
-    public abstract Vector3D[] getVertices();
+    public abstract Vector4D[] getVertices();
 
     @Override
     public String toString() {

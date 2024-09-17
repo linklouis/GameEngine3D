@@ -8,7 +8,7 @@ import gameengine.threed.graphics.raytraceing.textures.Metallic;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
 import gameengine.threed.prebuilt.objectmovement.InPlane3D;
 import gameengine.threed.prebuilt.objectmovement.collisions.SphereCollider;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class Sphere extends GameObject {
         get(Visual3D.class).instantiate(this, get(SphereGraphics.class));
     }
 
-    public Sphere(Vector3D position, double r, RayTracingTexture texture) {
+    public Sphere(Vector4D position, double r, RayTracingTexture texture) {
         super(new SphereCollider(), new InPlane3D(), new SphereGraphics(), new Visual3D());
         get(SphereCollider.class).instantiate(this, r);
         get(InPlane3D.class).instantiate(this, position);

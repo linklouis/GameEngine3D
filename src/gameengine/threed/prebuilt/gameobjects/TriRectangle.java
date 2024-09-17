@@ -6,7 +6,7 @@ import gameengine.threed.graphics.raytraceing.textures.Metallic;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
 import gameengine.threed.prebuilt.objectmovement.InPlane3D;
 import gameengine.threed.prebuilt.objectmovement.collisions.PolyObject;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -20,49 +20,49 @@ public class TriRectangle extends PolyObject<Tri> {
      * Construction:
      */
 
-    public TriRectangle(double x, double y, double z, Vector3D space,
+    public TriRectangle(double x, double y, double z, Vector4D space,
                         RayTracingTexture texture) {
         super(generateVertices(x, y, z, space), new Mesh<>(new Tri[0]), new InPlane3D());
         get(InPlane3D.class).instantiate(this, x, y, z);
         setTexture(texture);
     }
 
-    public TriRectangle(double x, double y, double z, Vector3D space, Color color,
+    public TriRectangle(double x, double y, double z, Vector4D space, Color color,
                         boolean isLightSource) {
         super(generateVertices(x, y, z, space), new Mesh<>(new Tri[0]), new InPlane3D());
         setTexture(new Metallic(color, isLightSource ? 1 : 0, 0));
         get(InPlane3D.class).instantiate(this, x, y, z);
     }
 
-    private static Vector3D[] generateVertices(double x, double y, double z,
-                                               Vector3D space) {
-        return new Vector3D[] {
-                new Vector3D(x, y, z),
-                new Vector3D(
+    private static Vector4D[] generateVertices(double x, double y, double z,
+                                               Vector4D space) {
+        return new Vector4D[] {
+                new Vector4D(x, y, z),
+                new Vector4D(
                         x + space.getX(),
                         y,
                         z),
-                new Vector3D(
+                new Vector4D(
                         x + space.getX(),
                         y + space.getY(),
                         z),
-                new Vector3D(
+                new Vector4D(
                         x,
                         y + space.getY(),
                         z),
-                new Vector3D(
+                new Vector4D(
                         x,
                         y,
                         z + space.getZ()),
-                new Vector3D(
+                new Vector4D(
                         x + space.getX(),
                         y,
                         z + space.getZ()),
-                new Vector3D(
+                new Vector4D(
                         x + space.getX(),
                         y + space.getY(),
                         z + space.getZ()),
-                new Vector3D(
+                new Vector4D(
                         x,
                         y + space.getY(),
                         z + space.getZ())
@@ -80,7 +80,7 @@ public class TriRectangle extends PolyObject<Tri> {
     }
 
     @Override
-    protected Tri[] createMesh(Vector3D[] vertices) {
+    protected Tri[] createMesh(Vector4D[] vertices) {
         RayTracingTexture texture = new Metallic(Color.WHITE, 1, 0);
 
         return new Tri[]{

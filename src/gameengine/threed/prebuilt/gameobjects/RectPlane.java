@@ -6,7 +6,7 @@ import gameengine.threed.graphics.raytraceing.textures.Metallic;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
 import gameengine.threed.prebuilt.objectmovement.InPlane3D;
 import gameengine.threed.prebuilt.objectmovement.collisions.PolyObject;
-import gameengine.vectormath.Vector3D;
+import gameengine.vectormath.Vector4D;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class RectPlane extends PolyObject<Tri> {
     private RayTracingTexture texture;
-    public RectPlane(Vector3D position, Vector3D displacement,
+    public RectPlane(Vector4D position, Vector4D displacement,
                      RayTracingTexture texture) {
         super(generateVertices(position, displacement),
                 new Mesh<>(new Tri[0]), new InPlane3D());
@@ -25,30 +25,30 @@ public class RectPlane extends PolyObject<Tri> {
     }
 
     public RectPlane(double x, double y, double z,
-                     Vector3D displacement, RayTracingTexture texture) {
-        super(generateVertices(new Vector3D(x, y, z), displacement),
+                     Vector4D displacement, RayTracingTexture texture) {
+        super(generateVertices(new Vector4D(x, y, z), displacement),
                 new Mesh<>(new Tri[0]), new InPlane3D());
         get(InPlane3D.class).instantiate(this, x, y, z);
 
         setTexture(texture);
     }
 
-    private static Vector3D[] generateVertices(Vector3D position,
-                                               Vector3D displacement) {
-        return new Vector3D[] {
+    private static Vector4D[] generateVertices(Vector4D position,
+                                               Vector4D displacement) {
+        return new Vector4D[] {
                 position,
-                new Vector3D(
+                new Vector4D(
                         position.getX() + displacement.getX(),
                         position.getY()
                                 + (displacement.getZ() != 0 ?
                                 displacement.getY()
                                 : 0),
                         position.getZ()),
-                new Vector3D(
+                new Vector4D(
                         position.getX() + displacement.getX(),
                         position.getY() + displacement.getY(),
                         position.getZ() + displacement.getZ()),
-                new Vector3D(
+                new Vector4D(
                         position.getX(),
                         position.getY()
                                 + (displacement.getZ() == 0 ?
@@ -69,7 +69,7 @@ public class RectPlane extends PolyObject<Tri> {
     }
 
     @Override
-    protected Tri[] createMesh(Vector3D[] vertices) {
+    protected Tri[] createMesh(Vector4D[] vertices) {
         RayTracingTexture texture = new Metallic(Color.WHITE, 1, 0);
 
         return new Tri[]{
