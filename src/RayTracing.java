@@ -1,23 +1,20 @@
-import gameengine.threed.drivers.GameDriver3D;
-import gameengine.threed.graphics.raytraceing.*;
-import gameengine.threed.graphics.raytraceing.objectgraphics.RayTraceable;
-import gameengine.threed.graphics.raytraceing.objectgraphics.SphereGraphics;
-import gameengine.threed.graphics.raytraceing.objectgraphics.TriGraphics;
-import gameengine.threed.graphics.raytraceing.textures.*;
-import gameengine.threed.prebuilt.gameobjects.*;
-import gameengine.threed.prebuilt.objectmovement.physics.PhysicsEngine3D;
-import gameengine.threed.drivers.GraphicsDriver3D;
-import gameengine.timeformatting.TimeFormatter;
-import gameengine.vectormath.Vector2D;
-import gameengine.vectormath.Vector3D;
+import gameengine.drivers.GameDriver;
+import gameengine.graphics.raytraceing.*;
+import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
+import gameengine.graphics.raytraceing.textures.*;
+import gameengine.Objects.prebuilt.*;
+import gameengine.Objects.prebuilt.gameobjects.*;
+import gameengine.drivers.PhysicsEngine3D;
+import gameengine.drivers.GraphicsDriver;
+import gameengine.utilities.timeformatting.TimeFormatter;
+import gameengine.utilities.vectormath.Vector2D;
+import gameengine.utilities.vectormath.Vector3D;
 import javafx.scene.paint.Color;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-public class RayTracing extends GameDriver3D {
+public class RayTracing extends GameDriver<GraphicsDriver<RayTraceable>, PhysicsEngine3D> {
     private final static int SIZE = 400;
     private int renders = 0;
     private long avTime = 0;
@@ -32,7 +29,7 @@ public class RayTracing extends GameDriver3D {
      */
 
     public RayTracing() {
-        super("LightRay Tracing", new GraphicsDriver3D<>(SIZE, SIZE,
+        super("LightRay Tracing", new GraphicsDriver<>(SIZE, SIZE,
                         new RayTracedCamera(-2, -10, -10, new Vector3D(0.8, 3, 1.8),
                                 new Vector2D(/*2000, 2000*//*1000, 1000*/700, 700/*1280, 720*//*1920.0, 1080.0*/),
                                 10, 10, true, 70/*180*/)),
@@ -797,7 +794,7 @@ public class RayTracing extends GameDriver3D {
 
     private void measureRender() {
         mainCam.requestUpdate();
-        mainCam.update((Collection<RayTraceable>) getGraphicsDriver().getVisualObjects());
+        mainCam.update(getGraphicsDriver().getVisualObjects());
         if (renders < NUM_TO_TEST) {
             getGraphicsDriver().getCamera().requestUpdate();
             avTime += mainCam.getRenderTime();

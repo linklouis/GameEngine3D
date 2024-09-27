@@ -1,0 +1,106 @@
+package gameengine.graphics.raytraceing.textures;
+
+import gameengine.graphics.raytraceing.LightRay;
+import gameengine.graphics.raytraceing.Reflection;
+import gameengine.utilities.vectormath.Vector3D;
+import javafx.scene.paint.Color;
+
+public abstract class RayTracingTexture {
+    private Color color;
+    private double emissionStrength;
+    private Vector3D emissionColor;
+    private Vector3D emission;
+
+    public RayTracingTexture(Color color, double emissionStrength, Vector3D emissionColor) {
+        this.color = color;
+        this.emissionStrength = emissionStrength;
+        this.emissionColor = new Vector3D(emissionColor);
+        calculateEmission();
+    }
+
+    public RayTracingTexture(Color color, double emissionStrength, Color emissionColor) {
+        this.color = color;
+        this.emissionStrength = emissionStrength;
+        this.emissionColor = new Vector3D(emissionColor);
+        calculateEmission();
+    }
+
+    public abstract Reflection reflection(final LightRay lightRayDirection,
+                                          final Vector3D surfaceNormal);
+
+    public Vector3D scatterRay(Vector3D surfaceNormal) {
+        Vector3D reflection = Vector3D.random(-1, 1);
+//        reflection =;
+        return reflection.add(surfaceNormal.unitVector()).unitVector();
+//        if (reflection.dotProduct(surfaceNormal) > 0) {
+//            reflection = reflection.scalarMultiply(-1);
+//        }
+//        return reflection;
+    }
+
+    public Vector3D reflectRay(final Vector3D rayDirection,
+                               final Vector3D surfaceNormal) {
+        return rayDirection.reflectFromNormal(surfaceNormal);
+//          return rayDirection.subtract(
+//                surfaceNormal.scalarMultiply(
+//                        2 * rayDirection.dotProduct(surfaceNormal)));
+                              /*  / Math.pow(surfaceNormal.magnitude(), 2)*/
+    }
+
+    protected Vector3D defaultColorUpdate(Vector3D rayColor) {
+        return rayColor.multiplyAcross(colorVector());
+    }
+
+
+    /*
+     * Utilities:
+     */
+
+    public Color getColor() {
+        return color;
+    }
+
+    public Vector3D colorVector() {
+        return new Vector3D(color);
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public double getEmissionStrength() {
+        return emissionStrength;
+    }
+
+    public void setEmissionStrength(double emissionStrength) {
+        this.emissionStrength = emissionStrength;
+        calculateEmission();
+    }
+
+    public Vector3D getEmissionColor() {
+        return emissionColor;
+    }
+
+    public void setEmissionColor(Vector3D emissionColor) {
+        this.emissionColor = emissionColor;
+        calculateEmission();
+    }
+
+    public Vector3D getEmission() {
+        return emission;
+    }
+
+    protected void calculateEmission() {
+        emission = emissionColor.scalarMultiply(emissionStrength);
+    }
+
+    public boolean isLightSource() {
+        return emissionStrength > 0;
+    }
+
+    @Override
+    public String toString() {
+        return "RayTracingTexture: " + color;
+//                + ", " + isLightSource();
+    }
+}

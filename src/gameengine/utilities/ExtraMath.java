@@ -1,7 +1,7 @@
 package gameengine.utilities;
 
-import gameengine.threed.geometry.Ray;
-import gameengine.vectormath.Vector3D;
+import gameengine.geometry.Ray;
+import gameengine.utilities.vectormath.Vector3D;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
