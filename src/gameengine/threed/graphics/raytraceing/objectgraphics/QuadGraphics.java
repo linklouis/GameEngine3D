@@ -1,51 +1,17 @@
 package gameengine.threed.graphics.raytraceing.objectgraphics;
 
-import gameengine.skeletons.GameObject;
-import gameengine.skeletons.Modifier;
 import gameengine.threed.geometry.Ray;
 import gameengine.threed.geometry.Rect3D;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
-import gameengine.utilities.ArgumentContext;
-import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector4D;
-
-import java.util.List;
+import gameengine.vectormath.Vector3D;
 
 public class QuadGraphics extends RayTraceable {
     // TODO keep a position variable, and add it to rect's vertices position to not make a new Rect3D for each movement.
     private Rect3D rect;
-
-
-    /*
-     * Construction:
-     */
-
-    @Override
-    public List<Class<? extends Modifier>> getDependencies() {
-        return null;
-    }
-
-    @Override
-    public ArgumentContext[] getArgumentContexts() {
-        return new ArgumentContext[] {
-                new ArgumentContext(
-                        new ModifierInstantiateParameter<>(
-                                "vertices", Vector4D[].class,
-                                this::setVertices),
-                        new ModifierInstantiateParameter<>(
-                                "texture", RayTracingTexture.class,
-                                this::setTexture)
-                )
-        };
-    }
-
-    @Override
-    public void instantiate(GameObject parent, Object... args) {
-        try {
-            super.instantiate(parent, args);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    
+    public QuadGraphics(Vector3D[] vertices, RayTracingTexture texture) {
+        super(texture);
+        setVertices(vertices);
     }
 
 
@@ -61,7 +27,7 @@ public class QuadGraphics extends RayTraceable {
      * @return
      */
     @Override
-    public Vector4D surfaceNormal(Ray perspective) {
+    public Vector3D surfaceNormal(Ray perspective) {
         if (rect.normal().dotProduct(perspective.getDirection()) > 0) {
             return rect.normal().scalarMultiply(-1);
         }
@@ -83,9 +49,6 @@ public class QuadGraphics extends RayTraceable {
     @Override
     public double distanceToCollide(final Ray ray, final double curSmallestDist, double amountInDirection) {
         double distance = rect.distanceToCollide(ray);
-//        if (Double.isNaN(distance)) {
-//            return distance;
-//        }
         return rect.contains(ray, distance) ? distance : Double.NaN;
     }
 
@@ -95,32 +58,32 @@ public class QuadGraphics extends RayTraceable {
      */
 
     @Override
-    public Vector4D[] getVertices() {
+    public Vector3D[] getVertices() {
         return rect.vertices();
     }
 
     @Override
-    public Vector4D getCenter() {
+    public Vector3D getCenter() {
         return rect.vertex1();
     }
 
-    public Vector4D getVertex1() {
+    public Vector3D getVertex1() {
         return rect.vertex1();
     }
 
-    public Vector4D getVertex2() {
+    public Vector3D getVertex2() {
         return rect.vertex2();
     }
 
-    public Vector4D getVertex3() {
+    public Vector3D getVertex3() {
         return rect.vertex3();
     }
 
-    public Vector4D getVertex4() {
+    public Vector3D getVertex4() {
         return rect.vertex4();
     }
 
-    private void setVertices(Vector4D[] vertices) {
+    private void setVertices(Vector3D[] vertices) {
         rect = new Rect3D(vertices[0], vertices[1], vertices[2], vertices[3]);
     }
 

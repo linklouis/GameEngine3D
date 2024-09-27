@@ -2,8 +2,9 @@ package gameengine.threed.drivers;
 
 import gameengine.skeletons.GraphicsDriver;
 import gameengine.threed.graphics.Camera;
-import gameengine.threed.graphics.GraphicsObject3D;
-import gameengine.threed.graphics.Visual3D;
+import gameengine.threed.graphics.HasRenderable;
+import gameengine.threed.graphics.Renderable;
+import gameengine.threed.graphics.raytraceing.objectgraphics.RayTraceable;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -14,9 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class GraphicsDriver3D<RenderType extends GraphicsObject3D> extends GraphicsDriver<Visual3D> {
-    private final List<Visual3D> visualObjects = new ArrayList<>();
-    private final List<RenderType> cameraObjects = new ArrayList<>();
+public class GraphicsDriver3D<RenderType extends Renderable> extends GraphicsDriver<RenderType> {
+    private final List<RenderType> visualObjects = new ArrayList<>();
     private final ImageView view;
     private Camera<RenderType> camera;
 
@@ -55,7 +55,7 @@ public class GraphicsDriver3D<RenderType extends GraphicsObject3D> extends Graph
 
     @Override
     public void updateGraphics() {
-        camera.update(cameraObjects);
+        camera.update(visualObjects);
     }
 
 
@@ -63,19 +63,19 @@ public class GraphicsDriver3D<RenderType extends GraphicsObject3D> extends Graph
      * Utilities:
      */
 
-    public void add(Visual3D newObject) {
+    public void add(RenderType newObject) {
         visualObjects.add(newObject);
-        if (camera.canRender(newObject)) {
-            cameraObjects.add(camera.getRenderableFrom(newObject).get());
-        }
+//        if (camera.canRender(newObject)) {
+//            cameraObjects.add(newObject);
+//        }
 //        cameraObjects = camera.getValidObjects(visualObjects);
     }
 
-    public Visual3D get(int index) {
+    public RenderType get(int index) {
         return visualObjects.get(index);
     }
 
-    public void forEach(Consumer<Visual3D> function) {
+    public void forEach(Consumer<RenderType> function) {
         visualObjects.forEach(function);
     }
 
@@ -87,11 +87,11 @@ public class GraphicsDriver3D<RenderType extends GraphicsObject3D> extends Graph
         this.camera = camera;
     }
 
-    public List<Visual3D> getVisualObjects() {
+    public List<RenderType> getVisualObjects() {
         return visualObjects;
     }
 
-    public List<RenderType> getCameraObjects() {
-        return cameraObjects;
-    }
+//    public List<RenderType> getCameraObjects() {
+//        return cameraObjects;
+//    }
 }

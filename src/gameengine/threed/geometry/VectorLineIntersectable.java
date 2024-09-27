@@ -1,9 +1,9 @@
 package gameengine.threed.geometry;
 
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 
 public interface VectorLineIntersectable {
     boolean willCollide(VectorLine3D line);
 
-    Vector4D getCenter();
+    Vector3D getCenter();
 }

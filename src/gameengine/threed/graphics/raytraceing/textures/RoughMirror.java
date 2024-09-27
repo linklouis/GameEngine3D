@@ -3,7 +3,7 @@ package gameengine.threed.graphics.raytraceing.textures;
 import gameengine.threed.graphics.raytraceing.LightRay;
 import gameengine.threed.graphics.raytraceing.Reflection;
 import gameengine.utilities.ExtraMath;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.paint.Color;
 
 public class RoughMirror extends RayTracingTexture {
@@ -30,7 +30,7 @@ public class RoughMirror extends RayTracingTexture {
      */
     public RoughMirror(final Color color,
                        final double emissionStrength,
-                       final Vector4D emissionColor,
+                       final Vector3D emissionColor,
                        final double reflectivity,
                        final double smoothness) {
         super(color, emissionStrength, emissionColor);
@@ -54,7 +54,7 @@ public class RoughMirror extends RayTracingTexture {
                        final double emissionStrength,
                        final double reflectivity,
                        final double smoothness) {
-        super(color, emissionStrength, new Vector4D(1));
+        super(color, emissionStrength, new Vector3D(1));
         this.reflectivity = reflectivity;
         this.smoothness = smoothness;
         specularProbability = 0;
@@ -62,7 +62,7 @@ public class RoughMirror extends RayTracingTexture {
 
     public RoughMirror(final Color color,
                        final double emissionStrength,
-                       final Vector4D emissionColor,
+                       final Vector3D emissionColor,
                        final double reflectivity,
                        final double smoothness,
                        final double specularProbability) {
@@ -89,7 +89,7 @@ public class RoughMirror extends RayTracingTexture {
                        final double reflectivity,
                        final double smoothness,
                        final double specularProbability) {
-        super(color, emissionStrength, new Vector4D(1));
+        super(color, emissionStrength, new Vector3D(1));
         this.reflectivity = reflectivity;
         this.smoothness = smoothness;
         this.specularProbability = specularProbability;
@@ -108,11 +108,11 @@ public class RoughMirror extends RayTracingTexture {
      * @param surfaceNormal The normal vector to the surface where the lightRay is
      *                      hitting.
      * @return The direction that the light lightRay should bounce as a
-     *          {@link Vector4D}.
+     *          {@link Vector3D}.
      */
     @Override
     public Reflection reflection(final LightRay lightRay,
-                                 final Vector4D surfaceNormal) {
+                                 final Vector3D surfaceNormal) {
         return new Reflection(
                 ExtraMath.selectRandom(() -> reflectRay(lightRay.getDirection(), surfaceNormal),
                         () -> scatterRay(surfaceNormal).blendWith(reflectRay(lightRay.getDirection(), surfaceNormal), smoothness), reflectivity),

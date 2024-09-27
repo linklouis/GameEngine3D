@@ -1,5 +1,7 @@
 package gameengine.skeletons;
 
+import gameengine.threed.graphics.HasRenderable;
+import gameengine.threed.graphics.Renderable;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -7,7 +9,7 @@ import javafx.stage.Stage;
 
 import java.util.function.Consumer;
 
-public abstract class GraphicsDriver<VisualType extends Visual> {
+public abstract class GraphicsDriver<VisualType extends Renderable> {
     public final int WIDTH, HEIGHT;
     public Color background = Color.BLACK;
     private Pane root;

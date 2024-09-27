@@ -3,14 +3,14 @@ package gameengine.threed.geometry;
 import gameengine.threed.graphics.raytraceing.LightRay;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayIntersectableList;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayTraceable;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 
 import java.util.LinkedHashMap;
 
 public class Ray extends VectorLine3D {
 
 
-    public Ray(final Vector4D startPosition, final Vector4D direction) {
+    public Ray(final Vector3D startPosition, final Vector3D direction) {
         super(startPosition, direction);
     }
 
@@ -55,7 +55,7 @@ public class Ray extends VectorLine3D {
         RayIntersectable closest = element.value();
         element = element.next();
         double newDistance;
-        Vector4D toCenter;
+        Vector3D toCenter;
 
         // While there are more objects in the scene,
         // if that object is closer than the current closest distance, check the distance it collides at,
@@ -90,7 +90,7 @@ public class Ray extends VectorLine3D {
 //        RayIntersectable closest = null;
 //        double newDistance;
 //        double amountInDirec;
-//        Vector4D toCenter;
+//        Vector3D toCenter;
 //
 //        for (RayIntersectableList.Element element = objectsInField.getHead();
 //             element != null; element = element.next()) {

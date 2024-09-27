@@ -1,96 +1,43 @@
 package gameengine.skeletons;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import gameengine.threed.objectproperties.Directional;
+import gameengine.threed.objectproperties.HasLocation;
+import gameengine.vectormath.Vector3D;
 
-public abstract class GameObject {
-    private final Modifier[] modifiers;
+public abstract class GameObject implements HasLocation {
+    private Vector3D location;
 
-    public GameObject() {
-        modifiers = new Modifier[0];
+    public GameObject(double x, double y, double z) {
+        this(new Vector3D(x, y, z));
     }
 
-
-//    public gameengine.skeletons.GameObject(gameengine.skeletons.Modifier[] modifiers) {
-//        this.modifiers = modifiers;
-//    }
-
-    public GameObject(Modifier... modifiers) {
-        this.modifiers = modifiers;
+    public GameObject(Vector3D location) {
+        this.location = location;
     }
 
-    public GameObject(Collection<Modifier> modifiers) {
-        this.modifiers = modifiers.toArray(new Modifier[0]);
+    @Override
+    public void setLocation(Vector3D newLocation) {
+        this.location = newLocation;
     }
 
-    public Modifier[] getModifiers() {
-        return modifiers;
+    @Override
+    public Vector3D getLocation() {
+        return location;
     }
 
-    public <T extends Modifier> T get(Class<T> modifierClass) {
-        for (Modifier modifier : getModifiers()) {
-            if (modifierClass.isAssignableFrom(modifier.getClass())) {
-                return (T) modifier;
-            }
-        }
-        ensureDependencies(); // TODO
-        return null;
+    @Override
+    public double getX() {
+        return getLocation().getX();
     }
 
-    // TODO add check that all objects have been correctly instantiated
-
-    public List<Class<? extends Modifier>> getDependencies() {
-        List<Class<? extends Modifier>> dependantClasses = new ArrayList<>();
-
-        for (Modifier modifier : getModifiers()) {
-            dependantClasses.addAll(modifier.getDependencies());
-        }
-
-        List<Class<? extends Modifier>> noRepeats = new ArrayList<>();
-        for (Class<? extends Modifier> modifierClass : dependantClasses) {
-//            if (!noRepeats.contains(modifierClass)) {
-//                noRepeats.add(modifierClass);
-//            }
-            boolean contains = false;
-            for (Class<? extends Modifier> modifierClass1 : noRepeats) {
-                if (modifierClass.equals(modifierClass1)) {
-                    contains = true;
-                    break;
-                }
-            }
-            if (!contains) {
-                noRepeats.add(modifierClass);
-            }
-        }
-
-        return noRepeats;
+    @Override
+    public double getY() {
+        return getLocation().getY();
     }
 
-    protected boolean hasAllDependancies() {
-        for (Class<? extends Modifier> modifierClass : getDependencies()) {
-            if (!containsModifier(modifierClass)) {
-                return false;
-            }
-        }
-        return true;
+    @Override
+    public double getZ() {
+        return getLocation().getZ();
     }
 
-    protected void ensureDependencies() {
-        for (Class<? extends Modifier> modifierClass : getDependencies()) {
-            if (!containsModifier(modifierClass)) {
-                throw new RuntimeException(this.getClass()
-                        + " requires a Modifier " + modifierClass + " but none was found.");
-            }
-        }
-    }
-
-    public <T extends Modifier> boolean containsModifier(Class<T> modifier) {
-        for (Modifier modifier1 : getModifiers()) {
-            if (modifier.isAssignableFrom(modifier1.getClass())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

@@ -1,54 +1,42 @@
 package gameengine.threed.prebuilt.gameobjects;
 
-import gameengine.skeletons.Modifier;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.threed.graphics.raytraceing.textures.Metallic;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
-import gameengine.threed.prebuilt.objectmovement.InPlane3D;
 import gameengine.threed.prebuilt.objectmovement.collisions.PolyObject;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RectPlane extends PolyObject<Tri> {
     private RayTracingTexture texture;
-    public RectPlane(Vector4D position, Vector4D displacement,
+    public RectPlane(Vector3D position, Vector3D displacement,
                      RayTracingTexture texture) {
-        super(generateVertices(position, displacement),
-                new Mesh<>(new Tri[0]), new InPlane3D());
-        get(InPlane3D.class).instantiate(this,
-                position.getX(), position.getY(), position.getZ());
+        super(position, generateVertices(position, displacement)/*, new Mesh<>(new Tri[0]), new InPlane3D()*/);
 
         setTexture(texture);
     }
 
     public RectPlane(double x, double y, double z,
-                     Vector4D displacement, RayTracingTexture texture) {
-        super(generateVertices(new Vector4D(x, y, z), displacement),
-                new Mesh<>(new Tri[0]), new InPlane3D());
-        get(InPlane3D.class).instantiate(this, x, y, z);
-
-        setTexture(texture);
+                     Vector3D displacement, RayTracingTexture texture) {
+        this(new Vector3D(x, y, z), displacement, texture);
     }
 
-    private static Vector4D[] generateVertices(Vector4D position,
-                                               Vector4D displacement) {
-        return new Vector4D[] {
+    private static Vector3D[] generateVertices(Vector3D position,
+                                               Vector3D displacement) {
+        return new Vector3D[] {
                 position,
-                new Vector4D(
+                new Vector3D(
                         position.getX() + displacement.getX(),
                         position.getY()
                                 + (displacement.getZ() != 0 ?
                                 displacement.getY()
                                 : 0),
                         position.getZ()),
-                new Vector4D(
+                new Vector3D(
                         position.getX() + displacement.getX(),
                         position.getY() + displacement.getY(),
                         position.getZ() + displacement.getZ()),
-                new Vector4D(
+                new Vector3D(
                         position.getX(),
                         position.getY()
                                 + (displacement.getZ() == 0 ?
@@ -59,17 +47,7 @@ public class RectPlane extends PolyObject<Tri> {
     }
 
     @Override
-    public List<Class<? extends Modifier>> getDependencies() {
-        return new ArrayList<>() {
-            {
-                add(InPlane3D.class);
-//                add(Visual2D.class);
-            }
-        };
-    }
-
-    @Override
-    protected Tri[] createMesh(Vector4D[] vertices) {
+    protected Tri[] createMesh(Vector3D[] vertices) {
         RayTracingTexture texture = new Metallic(Color.WHITE, 1, 0);
 
         return new Tri[]{
@@ -88,8 +66,8 @@ public class RectPlane extends PolyObject<Tri> {
 
     public void setTexture(RayTracingTexture texture) {
         this.texture = texture;
-        for (Polygon poly : get(Mesh.class).getPolygons()) {
-            poly.get(RayTraceable.class).setTexture(texture);
+        for (Polygon<? extends RayTraceable> poly : getMesh().getPolygons()) {
+            poly.getRenderable().setTexture(texture);
         }
     }
 }

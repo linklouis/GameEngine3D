@@ -3,7 +3,7 @@ package gameengine.threed.graphics.raytraceing;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayIntersectableList;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.vectormath.Vector2D;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -12,10 +12,10 @@ import javafx.scene.paint.Color;
 public class AdditiveRayTracingCamera extends RayTracedCamera {
     /**
      * Constructs a new {@code RayTracedCamera} with a position given by a
-     * {@link Vector4D} and a specified field of view given in degrees.
+     * {@link Vector3D} and a specified field of view given in degrees.
      *
      * @param position The position of the {@code Camera} in space.
-     * @param direction a {@link Vector4D} representing the amount the
+     * @param direction a {@link Vector3D} representing the amount the
      *                  {@code Camera} is facing in each direction.
      * @param imageDimensions The resolution to render the image at.
      * @param maxBounces The maximum number of times a light ray can bounce
@@ -28,7 +28,7 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
      *                           of view. Default value: 60.0
      */
     public AdditiveRayTracingCamera(
-            final Vector4D position, final Vector4D direction,
+            final Vector3D position, final Vector3D direction,
             final Vector2D imageDimensions,
             final int maxBounces, final int raysPerPixel,
             final boolean multiThreaded, final double fieldOfViewDegrees) {
@@ -42,7 +42,7 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
      * coordinates and a default field of view of 60 degrees.
      *
      * @param position The position of the {@code Camera} in space.
-     * @param direction a {@link Vector4D} representing the amount the
+     * @param direction a {@link Vector3D} representing the amount the
      *                  {@code Camera} is facing in each direction.
      * @param imageDimensions The resolution to render the image at.
      * @param maxBounces The maximum number of times a light ray can bounce
@@ -53,7 +53,7 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
      *                      multithreading when rendering images.
      */
     public AdditiveRayTracingCamera(
-            final Vector4D position, final Vector4D direction,
+            final Vector3D position, final Vector3D direction,
             final Vector2D imageDimensions,
             final int maxBounces, final int raysPerPixel,
             final boolean multiThreaded) {
@@ -69,7 +69,7 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
      * @param x The position of the {@code Camera} on the x-axis.
      * @param y The position of the {@code Camera} on the y-axis.
      * @param z The position of the {@code Camera} on the z-axis.
-     * @param direction a {@link Vector4D} representing the amount the
+     * @param direction a {@link Vector3D} representing the amount the
      *                  {@code Camera} is facing in each direction.
      * @param imageDimensions The resolution to render the image at.
      * @param maxBounces The maximum number of times a light ray can bounce
@@ -83,7 +83,7 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
      */
     public AdditiveRayTracingCamera(
             final double x, final double y, final double z,
-            final Vector4D direction, final Vector2D imageDimensions,
+            final Vector3D direction, final Vector2D imageDimensions,
             final int maxBounces, final int raysPerPixel,
             final boolean multiThreaded, final double fieldOfViewDegrees) {
         super(x, y, z, direction, imageDimensions, maxBounces, raysPerPixel,
@@ -98,7 +98,7 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
      * @param x The position of the {@code Camera} on the x-axis.
      * @param y The position of the {@code Camera} on the y-axis.
      * @param z The position of the {@code Camera} on the z-axis.
-     * @param direction a {@link Vector4D} representing the amount the
+     * @param direction a {@link Vector3D} representing the amount the
      *                  {@code Camera} is facing in each direction.
      * @param imageDimensions The resolution to render the image at.
      * @param maxBounces The maximum number of times a light ray can bounce
@@ -110,7 +110,7 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
      */
     public AdditiveRayTracingCamera(
             final double x, final double y, final double z,
-            final Vector4D direction, final Vector2D imageDimensions,
+            final Vector3D direction, final Vector2D imageDimensions,
             final int maxBounces, final int raysPerPixel,
             final boolean multiThreaded) {
         super(x, y, z, direction, imageDimensions, maxBounces, raysPerPixel,
@@ -131,25 +131,25 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
 //    protected void renderPixel(int pixelIndex, RayIntersectableList objects) {
 //        buffer.put(
 //                pixelIndex,
-//                new Vector4D(calculatePixelColor(rayTo(pixelIndex), objects,
-//                        new Vector4D(reader.getColor(pixelIndex % getWidth(), pixelIndex / getWidth()))
+//                new Vector3D(calculatePixelColor(rayTo(pixelIndex), objects,
+//                        new Vector3D(reader.getColor(pixelIndex % getWidth(), pixelIndex / getWidth()))
 //                                .scalarMultiply(numRenders * (getRaysPerPixel() - 1))
 //                ))
 //                        .scalarDivide(numRenders + 1).oneInt()
 //        );
 //    }
 //
-//    protected Vector4D calculatePixelColor(final LightRay startRay,
+//    protected Vector3D calculatePixelColor(final LightRay startRay,
 //                                        final RayIntersectableList objectsInField,
-//                                        final Vector4D averageColor) {
+//                                        final Vector3D averageColor) {
 //        RayTraceable firstCollision = (RayTraceable) startRay.firstCollision(objectsInField);
 //
 //        if (firstCollision == null) {
-//            return new Vector4D();
+//            return new Vector3D();
 //        }
 ////        if (firstCollision.getTexture().getColor().equals(Color.BLACK)
 ////                || firstCollision.getTexture().isLightSource()) {
-////            return averageColor.add(new Vector4D(firstCollision.getColor()));
+////            return averageColor.add(new Vector3D(firstCollision.getColor()));
 ////        }
 //
 //        for (int i = 0; i < getRaysPerPixel(); i++) {
@@ -165,10 +165,10 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
 
     private void populateColors() {
         for (int i = 0; i < getWidth() * getHeight(); i++) {
-            colors[i] = new Vector4D();
+            colors[i] = new Vector3D();
         }
     }
-    private final Vector4D[] colors = new Vector4D[getWidth() * getHeight()];
+    private final Vector3D[] colors = new Vector3D[getWidth() * getHeight()];
 
     @Override
     protected void renderPixel(int pixelIndex, RayIntersectableList objects) {
@@ -179,22 +179,22 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
 
     protected void calculatePixelColorVector(final LightRay startRay,
                                                  final RayIntersectableList objectsInField,
-                                                 Vector4D averageColor) {
+                                                 Vector3D averageColor) {
         RayTraceable firstCollision = (RayTraceable) startRay.firstCollision(objectsInField);
 
         if (firstCollision == null) {
-//            averageColor.addMutable(new Vector4D(Color.SKYBLUE));
+//            averageColor.addMutable(new Vector3D(Color.SKYBLUE));
             averageColor.addMutable(LightRay.getSkyColor(startRay.getDirection()));
             return/* averageColor*/;
         }
         if (firstCollision.getTexture().getColor().equals(Color.BLACK)
                 || firstCollision.getTexture().isLightSource()) {
-//            averageColor.addMutable(new Vector4D(firstCollision.getColor())/*.scalarDivide(getRaysPerPixel())*/);
+//            averageColor.addMutable(new Vector3D(firstCollision.getColor())/*.scalarDivide(getRaysPerPixel())*/);
             averageColor.addMutable(startRay.getReflected(firstCollision).getIncomingLight());
-            return /*averageColor.add(new Vector4D(firstCollision.getColor()))*/;
+            return /*averageColor.add(new Vector3D(firstCollision.getColor()))*/;
         }
 
-//        Vector4D averageColor = new Vector4D();
+//        Vector3D averageColor = new Vector3D();
         for (int i = 0; i <= getRaysPerPixel(); i++) {
             averageColor.addMutable(
                             startRay.getReflected(firstCollision).getColor(

@@ -1,22 +1,33 @@
 package gameengine.threed.geometry;
 
-import gameengine.twod.Rect;
 import gameengine.vectormath.Vector2D;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 
 import static gameengine.utilities.ExtraMath.*;
 
-public record Rect3D(Vector4D vertex1, Vector4D vertex2, Vector4D vertex3, Vector4D vertex4,
-                     Vector4D planeXaxis, Vector4D planeYaxis, Rect planeCoords, Vector4D normal, Vector4D center, double range) {
-    public Rect3D(Vector4D vertex1, Vector4D vertex2, Vector4D vertex3, Vector4D vertex4) {
+public record Rect3D(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3, Vector3D vertex4,
+                     Vector3D planeXaxis, Vector3D planeYaxis, Rect planeCoords, Vector3D normal, Vector3D center, double range) {
+
+    /**
+     * 2D Rect record that I for some reason made foundational to the 3D version
+     * @param min
+     * @param max
+     */
+    public record Rect(Vector2D min, Vector2D max) {
+        public boolean contains(Vector2D point) {
+            return min.getX() < point.getX() && max.getX() > point.getX()
+                    && min.getY() < point.getY() && max.getY() > point.getY();
+        }
+    }
+
+    public Rect3D(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3, Vector3D vertex4) {
         this(
                 vertex1, vertex2, vertex3, vertex4,
                 vertex2.subtract(vertex1).unitVector(), vertex4.subtract(vertex1).unitVector(),
                 new Rect(vertex1.projectToPlane(vertex2.subtract(vertex1).unitVector(), vertex4.subtract(vertex1).unitVector()),
-                        vertex3.projectToPlane(vertex2.subtract(vertex1).unitVector(), vertex4.subtract(vertex1).unitVector()),
-                        true),
+                        vertex3.projectToPlane(vertex2.subtract(vertex1).unitVector(), vertex4.subtract(vertex1).unitVector())),
                 vertex2.subtract(vertex1).crossProduct(vertex4.subtract(vertex1)).unitVector(),
-                Vector4D.average(vertex1, vertex2, vertex3, vertex4),
+                Vector3D.average(vertex1, vertex2, vertex3, vertex4),
                 vertex1.distance(vertex3)
         );
     }
@@ -33,12 +44,12 @@ public record Rect3D(Vector4D vertex1, Vector4D vertex2, Vector4D vertex3, Vecto
         return normal.dotWithSubtracted(vertex1, ray.getPosition()) / dirDotNorm;
     }
 
-    public boolean contains(Vector4D point) {
+    public boolean contains(Vector3D point) {
         return planeCoords.contains(onPlane(point));
     }
 
     public boolean contains(final VectorLine3D line, double distance) {
-//        Vector4D point = line.pointAtDistance(distance);
+//        Vector3D point = line.pointAtDistance(distance);
 //        if (point.distance(vertex1) > range) {
 //            return false;
 //        }
@@ -46,7 +57,7 @@ public record Rect3D(Vector4D vertex1, Vector4D vertex2, Vector4D vertex3, Vecto
         return planeCoords.contains(onPlane(line, distance));
     }
 
-    public Vector2D onPlane(Vector4D other) {
+    public Vector2D onPlane(Vector3D other) {
         return other.projectToPlane(planeXaxis, planeYaxis);
     }
 
@@ -78,7 +89,7 @@ public record Rect3D(Vector4D vertex1, Vector4D vertex2, Vector4D vertex3, Vecto
         return max(vertex1.getZ(), vertex2.getZ(), vertex3.getZ(), vertex4.getZ());
     }
 
-    public Vector4D[] vertices() {
-        return new Vector4D[] { vertex1, vertex2, vertex3, vertex4 };
+    public Vector3D[] vertices() {
+        return new Vector3D[] { vertex1, vertex2, vertex3, vertex4 };
     }
 }

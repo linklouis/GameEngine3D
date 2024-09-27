@@ -1,18 +1,18 @@
 package gameengine.threed.geometry;
 
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 
 public class VectorLine3D {
     /**
      * The direction the {@code Line} moves.
      */
-    private Vector4D direction;
+    private Vector3D direction;
     /**
      * The current position of the {@code Line}.
      */
-    protected Vector4D position;
+    protected Vector3D position;
 
-    public VectorLine3D(final Vector4D startPosition, final Vector4D direction) {
+    public VectorLine3D(final Vector3D startPosition, final Vector3D direction) {
         this.direction = direction.unitVector();
         this.position = startPosition;
     }
@@ -22,7 +22,7 @@ public class VectorLine3D {
      * Functionality:
      */
 
-    public Vector4D pointAtDistance(double distance) {
+    public Vector3D pointAtDistance(double distance) {
         return position.addMultiplied(direction, distance);
     }
 
@@ -35,15 +35,15 @@ public class VectorLine3D {
      * Utilities:
      */
 
-    public Vector4D getDirection() {
+    public Vector3D getDirection() {
         return direction;
     }
 
-    protected void setDirection(Vector4D direction) {
+    protected void setDirection(Vector3D direction) {
         this.direction = direction.unitVector();
     }
 
-    public Vector4D getPosition() {
+    public Vector3D getPosition() {
         return position;
     }
 }

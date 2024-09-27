@@ -1,16 +1,11 @@
 package gameengine.threed.prebuilt.gameobjects;
 
-import gameengine.skeletons.Modifier;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.threed.graphics.raytraceing.textures.Metallic;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
-import gameengine.threed.prebuilt.objectmovement.InPlane3D;
 import gameengine.threed.prebuilt.objectmovement.collisions.PolyObject;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TriRectangle extends PolyObject<Tri> {
     private RayTracingTexture texture;
@@ -20,49 +15,47 @@ public class TriRectangle extends PolyObject<Tri> {
      * Construction:
      */
 
-    public TriRectangle(double x, double y, double z, Vector4D space,
+    public TriRectangle(double x, double y, double z, Vector3D space,
                         RayTracingTexture texture) {
-        super(generateVertices(x, y, z, space), new Mesh<>(new Tri[0]), new InPlane3D());
-        get(InPlane3D.class).instantiate(this, x, y, z);
+        super(new Vector3D(x, y, z), generateVertices(x, y, z, space));
         setTexture(texture);
     }
 
-    public TriRectangle(double x, double y, double z, Vector4D space, Color color,
+    public TriRectangle(double x, double y, double z, Vector3D space, Color color,
                         boolean isLightSource) {
-        super(generateVertices(x, y, z, space), new Mesh<>(new Tri[0]), new InPlane3D());
+        super(new Vector3D(x, y, z), generateVertices(x, y, z, space));
         setTexture(new Metallic(color, isLightSource ? 1 : 0, 0));
-        get(InPlane3D.class).instantiate(this, x, y, z);
     }
 
-    private static Vector4D[] generateVertices(double x, double y, double z,
-                                               Vector4D space) {
-        return new Vector4D[] {
-                new Vector4D(x, y, z),
-                new Vector4D(
+    private static Vector3D[] generateVertices(double x, double y, double z,
+                                               Vector3D space) {
+        return new Vector3D[] {
+                new Vector3D(x, y, z),
+                new Vector3D(
                         x + space.getX(),
                         y,
                         z),
-                new Vector4D(
+                new Vector3D(
                         x + space.getX(),
                         y + space.getY(),
                         z),
-                new Vector4D(
+                new Vector3D(
                         x,
                         y + space.getY(),
                         z),
-                new Vector4D(
+                new Vector3D(
                         x,
                         y,
                         z + space.getZ()),
-                new Vector4D(
+                new Vector3D(
                         x + space.getX(),
                         y,
                         z + space.getZ()),
-                new Vector4D(
+                new Vector3D(
                         x + space.getX(),
                         y + space.getY(),
                         z + space.getZ()),
-                new Vector4D(
+                new Vector3D(
                         x,
                         y + space.getY(),
                         z + space.getZ())
@@ -70,17 +63,7 @@ public class TriRectangle extends PolyObject<Tri> {
     }
 
     @Override
-    public List<Class<? extends Modifier>> getDependencies() {
-        return new ArrayList<>() {
-            {
-                add(InPlane3D.class);
-//                add(Visual2D.class);
-            }
-        };
-    }
-
-    @Override
-    protected Tri[] createMesh(Vector4D[] vertices) {
+    protected Tri[] createMesh(Vector3D[] vertices) {
         RayTracingTexture texture = new Metallic(Color.WHITE, 1, 0);
 
         return new Tri[]{
@@ -126,9 +109,9 @@ public class TriRectangle extends PolyObject<Tri> {
     public void setTexture(RayTracingTexture texture) {
         this.texture = texture;
 //        int num = 1;
-        for (Polygon poly : get(Mesh.class).getPolygons()) {
+        for (Polygon<? extends RayTraceable> poly : getMesh().getPolygons()) {
 //            double col = (double) num / get(Mesh.class).getPolygons().length;
-            poly.get(RayTraceable.class).setTexture(texture);//new Metallic(new Color(col, col, col, 1), texture.isLightSource(), texture.getReflectivity()));
+            poly.getRenderable().setTexture(texture);//new Metallic(new Color(col, col, col, 1), texture.isLightSource(), texture.getReflectivity()));
 //            num++;
         }
     }

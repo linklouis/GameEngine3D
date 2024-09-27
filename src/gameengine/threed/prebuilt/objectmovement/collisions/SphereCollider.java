@@ -1,41 +1,15 @@
 package gameengine.threed.prebuilt.objectmovement.collisions;
 
-import gameengine.skeletons.Modifier;
-import gameengine.threed.prebuilt.objectmovement.InPlane3D;
-import gameengine.utilities.ArgumentContext;
-import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class SphereCollider extends Collider3D<SphereCollider> {
     private double radius;
-
-
-    /*
-     * Construction:
-     */
-
-    public SphereCollider() {
-        super();
-    }
-
-    public SphereCollider(Modifier... modifiers) {
-        super(modifiers);
-    }
-
-    @Override
-    public ArgumentContext[] getArgumentContexts() {
-        return new ArgumentContext[] {
-                new ArgumentContext(
-//                        new ModifierInstantiateParameter<>(
-//                                "collisionHandler", CollisionHandler.class,
-//                                this::setHandler),
-                        new ModifierInstantiateParameter<>(
-                                "radius", Double.class,
-                                this::setRadius)
-                )
-        };
+    
+    public SphereCollider(Vector3D location, double radius) {
+        super(location);
+        this.radius = radius;
     }
 
 
@@ -51,7 +25,7 @@ public class SphereCollider extends Collider3D<SphereCollider> {
     }
 
     @Override
-    public boolean contains(Vector4D point) {
+    public boolean contains(Vector3D point) {
         return Math.abs(point.subtract(getCenter()).magnitude()) <= getRadius();
     }
 
@@ -86,8 +60,8 @@ public class SphereCollider extends Collider3D<SphereCollider> {
     }
 
     @Override
-    public Vector4D getCenter() {
-        return getFromParent(InPlane3D.class).getLocation();
+    public Vector3D getCenter() {
+        return getLocation();
     }
 
     @Override

@@ -1,19 +1,14 @@
 package gameengine.threed.graphics.raytraceing.objectgraphics;
 
-import gameengine.skeletons.Modifier;
-import gameengine.threed.graphics.GraphicsObject3D;
-import gameengine.threed.graphics.Visual3D;
+import gameengine.threed.geometry.RayIntersectable;
+import gameengine.threed.graphics.Renderable;
 import gameengine.threed.graphics.raytraceing.LightRay;
 import gameengine.threed.graphics.raytraceing.Reflection;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
-import gameengine.threed.geometry.RayIntersectable;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class RayTraceable extends GraphicsObject3D implements RayIntersectable {
+public abstract class RayTraceable implements RayIntersectable, Renderable {
     private RayTracingTexture texture = null;
 
 
@@ -21,28 +16,16 @@ public abstract class RayTraceable extends GraphicsObject3D implements RayInters
      * Construction:
      */
 
-    public RayTraceable() {
-        super();
+    public RayTraceable(RayTracingTexture texture) {
+        this.texture = texture;
     }
-
-    public RayTraceable(final Modifier[] modifiers) {
-        super(modifiers);
-    }
-
-    @Override
-    public List<Class<? extends Modifier>> getDependencies() {
-        List<Class<? extends Modifier>> modifiers = new ArrayList<>();
-        modifiers.add(Visual3D.class);
-        return modifiers;
-    }
-
 
     /*
      * Functionality:
      */
 
     public Reflection reflection(LightRay lightRay) {
-        return texture.reflection(lightRay, surfaceNormal(lightRay));
+        return getTexture().reflection(lightRay, surfaceNormal(lightRay));
     }
 
 
@@ -50,7 +33,22 @@ public abstract class RayTraceable extends GraphicsObject3D implements RayInters
      * Utilities:
      */
 
-    public abstract Vector4D[] getVertices();
+    public abstract Vector3D[] getVertices();
+//
+//    RayTracingTexture getTexture();
+//
+//    void setTexture(RayTracingTexture texture);
+//
+//    default Color getColor() {
+//        return getTexture().getColor();
+//    }
+//
+//    default Vector3D colorVector() {
+//        return new Vector3D(getTexture().getColor());
+//    }
+//    default void setColor(Color color) {
+//        getTexture().setColor(color);
+//    }
 
     public RayTracingTexture getTexture() {
         return texture;
@@ -64,8 +62,8 @@ public abstract class RayTraceable extends GraphicsObject3D implements RayInters
         return getTexture().getColor();
     }
 
-    public Vector4D colorVector() {
-        return new Vector4D(getTexture().getColor());
+    public Vector3D colorVector() {
+        return new Vector3D(getTexture().getColor());
     }
     public void setColor(Color color) {
         getTexture().setColor(color);

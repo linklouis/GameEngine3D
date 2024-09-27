@@ -2,34 +2,34 @@ package gameengine.threed.graphics.raytraceing.textures;
 
 import gameengine.threed.graphics.raytraceing.LightRay;
 import gameengine.threed.graphics.raytraceing.Reflection;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.paint.Color;
 
 public abstract class RayTracingTexture {
     private Color color;
     private double emissionStrength;
-    private Vector4D emissionColor;
-    private Vector4D emission;
+    private Vector3D emissionColor;
+    private Vector3D emission;
 
-    public RayTracingTexture(Color color, double emissionStrength, Vector4D emissionColor) {
+    public RayTracingTexture(Color color, double emissionStrength, Vector3D emissionColor) {
         this.color = color;
         this.emissionStrength = emissionStrength;
-        this.emissionColor = new Vector4D(emissionColor);
+        this.emissionColor = new Vector3D(emissionColor);
         calculateEmission();
     }
 
     public RayTracingTexture(Color color, double emissionStrength, Color emissionColor) {
         this.color = color;
         this.emissionStrength = emissionStrength;
-        this.emissionColor = new Vector4D(emissionColor);
+        this.emissionColor = new Vector3D(emissionColor);
         calculateEmission();
     }
 
     public abstract Reflection reflection(final LightRay lightRayDirection,
-                                          final Vector4D surfaceNormal);
+                                          final Vector3D surfaceNormal);
 
-    public Vector4D scatterRay(Vector4D surfaceNormal) {
-        Vector4D reflection = Vector4D.random(-1, 1);
+    public Vector3D scatterRay(Vector3D surfaceNormal) {
+        Vector3D reflection = Vector3D.random(-1, 1);
 //        reflection =;
         return reflection.add(surfaceNormal.unitVector()).unitVector();
 //        if (reflection.dotProduct(surfaceNormal) > 0) {
@@ -38,8 +38,8 @@ public abstract class RayTracingTexture {
 //        return reflection;
     }
 
-    public Vector4D reflectRay(final Vector4D rayDirection,
-                               final Vector4D surfaceNormal) {
+    public Vector3D reflectRay(final Vector3D rayDirection,
+                               final Vector3D surfaceNormal) {
         return rayDirection.reflectFromNormal(surfaceNormal);
 //          return rayDirection.subtract(
 //                surfaceNormal.scalarMultiply(
@@ -47,7 +47,7 @@ public abstract class RayTracingTexture {
                               /*  / Math.pow(surfaceNormal.magnitude(), 2)*/
     }
 
-    protected Vector4D defaultColorUpdate(Vector4D rayColor) {
+    protected Vector3D defaultColorUpdate(Vector3D rayColor) {
         return rayColor.multiplyAcross(colorVector());
     }
 
@@ -60,8 +60,8 @@ public abstract class RayTracingTexture {
         return color;
     }
 
-    public Vector4D colorVector() {
-        return new Vector4D(color);
+    public Vector3D colorVector() {
+        return new Vector3D(color);
     }
 
     public void setColor(Color color) {
@@ -77,16 +77,16 @@ public abstract class RayTracingTexture {
         calculateEmission();
     }
 
-    public Vector4D getEmissionColor() {
+    public Vector3D getEmissionColor() {
         return emissionColor;
     }
 
-    public void setEmissionColor(Vector4D emissionColor) {
+    public void setEmissionColor(Vector3D emissionColor) {
         this.emissionColor = emissionColor;
         calculateEmission();
     }
 
-    public Vector4D getEmission() {
+    public Vector3D getEmission() {
         return emission;
     }
 

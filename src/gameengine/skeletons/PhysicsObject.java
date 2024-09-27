@@ -1,4 +1,4 @@
 package gameengine.skeletons;
 
-public interface PhysicsObject<GraphicsObjectType extends GraphicsObject> {
+public interface PhysicsObject<GraphicsObjectType> {
 }

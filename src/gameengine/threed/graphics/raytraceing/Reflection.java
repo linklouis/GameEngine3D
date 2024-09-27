@@ -1,8 +1,8 @@
 package gameengine.threed.graphics.raytraceing;
 
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 
-public record Reflection(Vector4D direction, Vector4D color) {
+public record Reflection(Vector3D direction, Vector3D color) {
     public Reflection {
         direction.unitVectorMutable();
     }

@@ -1,38 +1,22 @@
 package gameengine.threed.prebuilt.gameobjects;
 
-import gameengine.skeletons.Modifier;
-import gameengine.threed.graphics.Visual3D;
+import gameengine.threed.graphics.HasRenderable;
 import gameengine.threed.graphics.raytraceing.objectgraphics.TriGraphics;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Tri extends Polygon {
-
-    public Tri(Vector4D point1, Vector4D point2, Vector4D point3, RayTracingTexture texture) {
-        super(new TriGraphics());
-        get(TriGraphics.class).instantiate(this, new Vector4D[] { point1, point2, point3 }, texture);
+public class Tri extends Polygon<TriGraphics> implements HasRenderable<TriGraphics> {
+    public Tri(Vector3D point1, Vector3D point2, Vector3D point3, RayTracingTexture texture) {
+        super(point1, new TriGraphics(new Vector3D[] { point1, point2, point3 }, texture));
     }
 
     @Override
-    public List<Class<? extends Modifier>> getDependencies() {
-        return new ArrayList<>() {
-            {
-                add(TriGraphics.class);
-                add(Visual3D.class);
-            }
-        };
-    }
-
-    @Override
-    public Vector4D[] getVertices() {
-        return get(TriGraphics.class).getVertices();
+    public Vector3D[] getVertices() {
+        return getRenderable().getVertices();
     }
 
     @Override
     public String toString() {
-        return "Tri: " + get(TriGraphics.class).toString();
+        return "Tri: " + getRenderable().toString();
     }
 }

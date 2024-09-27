@@ -2,7 +2,7 @@ package gameengine.threed.graphics.raytraceing.objectgraphics;
 
 
 import gameengine.threed.geometry.RayIntersectable;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 
 /**
  * A very lightweight and specific use-case singly linked list implementation
@@ -19,9 +19,9 @@ public final class RayIntersectableList {
      * A reference to the first Element in the list.
      */
     private Element head;
-    private final Vector4D relativeTo;
+    private final Vector3D relativeTo;
 
-    public RayIntersectableList(final RayIntersectable[] items, final Vector4D pointRelativeTo) {
+    public RayIntersectableList(final RayIntersectable[] items, final Vector3D pointRelativeTo) {
         relativeTo = pointRelativeTo;
         for (int i = items.length - 1; i >=0; i--) {
             add(items[i]);

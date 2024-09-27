@@ -1,16 +1,11 @@
 package gameengine.threed.prebuilt.gameobjects;
 
-import gameengine.skeletons.Modifier;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.threed.graphics.raytraceing.textures.Metallic;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
-import gameengine.threed.prebuilt.objectmovement.InPlane3D;
 import gameengine.threed.prebuilt.objectmovement.collisions.PolyObject;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class QuadRectangle extends PolyObject<Quad> {
     private RayTracingTexture texture;
@@ -20,56 +15,52 @@ public class QuadRectangle extends PolyObject<Quad> {
      * Construction:
      */
 
-    public QuadRectangle(double x, double y, double z, Vector4D space,
-                        RayTracingTexture texture) {
-        super(generateVertices(x, y, z, space), new Mesh<>(new Quad[0]), new InPlane3D());
-        get(InPlane3D.class).instantiate(this, x, y, z);
+    public QuadRectangle(double x, double y, double z, Vector3D space, RayTracingTexture texture) {
+        super(new Vector3D(x, y, z), generateVertices(x, y, z, space));
         setTexture(texture);
     }
 
-    public QuadRectangle(Vector4D position, Vector4D space,
+    public QuadRectangle(Vector3D position, Vector3D space,
                          RayTracingTexture texture) {
-        super(generateVertices(position.getX(), position.getY(), position.getZ(), space), new Mesh<>(new Quad[0]), new InPlane3D());
-        get(InPlane3D.class).instantiate(this, position);
+        super(position, generateVertices(position.getX(), position.getY(), position.getZ(), space));
         setTexture(texture);
     }
 
-    public QuadRectangle(double x, double y, double z, Vector4D space, Color color,
+    public QuadRectangle(double x, double y, double z, Vector3D space, Color color,
                          boolean isLightSource) {
-        super(generateVertices(x, y, z, space), new Mesh<>(new Quad[0]), new InPlane3D());
+        super(new Vector3D(x, y, z), generateVertices(x, y, z, space)/*, new Mesh<>(new Quad[0]), new InPlane3D()*/);
         setTexture(new Metallic(color, isLightSource ? 1 : 0, 0));
-        get(InPlane3D.class).instantiate(this, x, y, z);
     }
 
-    private static Vector4D[] generateVertices(double x, double y, double z,
-                                               Vector4D space) {
-        return new Vector4D[] {
-                new Vector4D(x, y, z),
-                new Vector4D(
+    private static Vector3D[] generateVertices(double x, double y, double z,
+                                               Vector3D space) {
+        return new Vector3D[] {
+                new Vector3D(x, y, z),
+                new Vector3D(
                         x + space.getX(),
                         y,
                         z),
-                new Vector4D(
+                new Vector3D(
                         x + space.getX(),
                         y + space.getY(),
                         z),
-                new Vector4D(
+                new Vector3D(
                         x,
                         y + space.getY(),
                         z),
-                new Vector4D(
+                new Vector3D(
                         x,
                         y,
                         z + space.getZ()),
-                new Vector4D(
+                new Vector3D(
                         x + space.getX(),
                         y,
                         z + space.getZ()),
-                new Vector4D(
+                new Vector3D(
                         x + space.getX(),
                         y + space.getY(),
                         z + space.getZ()),
-                new Vector4D(
+                new Vector3D(
                         x,
                         y + space.getY(),
                         z + space.getZ())
@@ -77,16 +68,7 @@ public class QuadRectangle extends PolyObject<Quad> {
     }
 
     @Override
-    public List<Class<? extends Modifier>> getDependencies() {
-        return new ArrayList<>() {
-            {
-                add(InPlane3D.class);
-            }
-        };
-    }
-
-    @Override
-    protected Quad[] createMesh(Vector4D[] vertices) {
+    protected Quad[] createMesh(Vector3D[] vertices) {
         RayTracingTexture texture = new Metallic(Color.WHITE, 1, 0);
 
         return new Quad[] {
@@ -126,9 +108,9 @@ public class QuadRectangle extends PolyObject<Quad> {
     public void setTexture(RayTracingTexture texture) {
         this.texture = texture;
 //        int num = 1;
-        for (Polygon poly : get(Mesh.class).getPolygons()) {
+        for (Polygon<? extends RayTraceable> poly : getMesh().getPolygons()) {
 //            double col = (double) num / get(Mesh.class).getPolygons().length;
-            poly.get(RayTraceable.class).setTexture(texture);//new Metallic(new Color(col, col, col, 1), texture.isLightSource(), texture.getReflectivity()));
+            poly.getRenderable().setTexture(texture);//new Metallic(new Color(col, col, col, 1), texture.isLightSource(), texture.getReflectivity()));
 //            num++;
         }
     }

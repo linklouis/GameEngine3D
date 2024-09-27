@@ -1,7 +1,7 @@
 package gameengine.utilities;
 
 import gameengine.threed.geometry.Ray;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
@@ -47,7 +47,7 @@ public interface ExtraMath {
                 a.get();
     }
 
-    static double distToCollideSphere(Ray lightRay, Vector4D center, double radiusSquared) {
+    static double distToCollideSphere(Ray lightRay, Vector3D center, double radiusSquared) {
         double b = -lightRay.getDirection().dotWithSubtracted(lightRay.getPosition(), center);
         return b - Math.sqrt(b * b + radiusSquared - lightRay.getPosition().distanceSquared(center));
     }

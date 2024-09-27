@@ -1,6 +1,6 @@
 package gameengine.threed.graphics.raytraceing.postprocesses;
 
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
@@ -21,11 +21,11 @@ public class FillIn implements PostProcess {
 //        IntStream.range(RANGE, (int) (image.getWidth() - RANGE)).parallel().forEach(x ->
 //                IntStream.range(RANGE, (int) (image.getHeight() - RANGE)).forEach(y ->
 //                        {
-//                            Vector4D color = new Vector4D();
+//                            Vector3D color = new Vector3D();
 //                            IntStream.range(x - RANGE, x + RANGE).forEach(x1 ->
 //                                    IntStream.range(y - RANGE, y + RANGE).forEach(y1 ->
 //                                            {
-//                                                color.addMutable(new Vector4D(reader.getColor(x1, y1)));
+//                                                color.addMutable(new Vector3D(reader.getColor(x1, y1)));
 //                                            }
 //                                    ));
 //
@@ -36,7 +36,7 @@ public class FillIn implements PostProcess {
 ////        IntStream.range(RANGE, (int) (image.getWidth() - RANGE)).parallel().forEach(x ->
 ////                IntStream.range(RANGE, (int) (image.getHeight() - RANGE)).forEach(y ->
 ////                        {
-////                            buffer.put((int) (x + y * image.getWidth()), Vector4D.oneInt(reader.getColor(x, y)));
+////                            buffer.put((int) (x + y * image.getWidth()), Vector3D.oneInt(reader.getColor(x, y)));
 ////                        }
 ////                ));
 //
@@ -60,13 +60,13 @@ public class FillIn implements PostProcess {
         IntStream.range(RANGE, (int) (image.getWidth() - RANGE)).parallel().forEach(x ->
                 IntStream.range(RANGE, (int) (image.getHeight() - RANGE)).forEach(y ->
                         {
-                            Vector4D color = new Vector4D();
+                            Vector3D color = new Vector3D();
                             int num = 0;
                             for (int x1 = x - RANGE; x1 <= x + RANGE; x1++) {
                                 for (int y1 = y - RANGE; y1 <= y + RANGE; y1++) {
                                     num++;
-                                    if (Math.abs(new Vector4D(reader.getColor(x, y)).subtract(new Vector4D(reader.getColor(x1, y1))).magnitude()) <= ACCEPTABLE_DIFF) {
-                                        color.addMutable(new Vector4D(reader.getColor(x1, y1)));
+                                    if (Math.abs(new Vector3D(reader.getColor(x, y)).subtract(new Vector3D(reader.getColor(x1, y1))).magnitude()) <= ACCEPTABLE_DIFF) {
+                                        color.addMutable(new Vector3D(reader.getColor(x1, y1)));
                                     }
                                 }
                             }
@@ -75,15 +75,15 @@ public class FillIn implements PostProcess {
                             double sumSquaredDiff = 0;
                             for (int x1 = x - RANGE; x1 <= x + RANGE; x1++) {
                                 for (int y1 = y - RANGE; y1 <= y + RANGE; y1++) {
-                                    if (Math.abs(new Vector4D(reader.getColor(x, y)).subtract(new Vector4D(reader.getColor(x1, y1))).magnitude()) <= ACCEPTABLE_DIFF) {
-                                        Vector4D diff = new Vector4D(reader.getColor(x1, y1)).subtract(color);
+                                    if (Math.abs(new Vector3D(reader.getColor(x, y)).subtract(new Vector3D(reader.getColor(x1, y1))).magnitude()) <= ACCEPTABLE_DIFF) {
+                                        Vector3D diff = new Vector3D(reader.getColor(x1, y1)).subtract(color);
                                         sumSquaredDiff += diff.dotProduct(diff);
                                     }
                                 }
                             }
 //                            double sumSquaredDiff = IntStream.range(x - RANGE, x + RANGE).mapToDouble(x1 ->
 //                                    IntStream.range(y - RANGE, y + RANGE).mapToDouble(y1 -> {
-//                                        Vector4D diff = new Vector4D(reader.getColor(x1, y1)).subtract(color);
+//                                        Vector3D diff = new Vector3D(reader.getColor(x1, y1)).subtract(color);
 //                                        return diff.dotProduct(diff);
 //                                    }).sum()
 //                            ).sum();
@@ -95,13 +95,13 @@ public class FillIn implements PostProcess {
                             double standardDeviation = Math.sqrt(variance);
 
                             if (num > 1) {
-                                color = color.subtract(new Vector4D(reader.getColor(x, y))).scalarDivide(num/*RANGE * RANGE * 8*/);
+                                color = color.subtract(new Vector3D(reader.getColor(x, y))).scalarDivide(num/*RANGE * RANGE * 8*/);
 
                                 buffer.put((int) (x + y * image.getWidth()), color.oneInt());
                             } else {
 //                                color.scalarDivide(RANGE * RANGE * 4);
 //                                buffer.put((int) (x + y * image.getWidth()), color.oneInt());
-                                buffer.put((int) (x + y * image.getWidth()), new Vector4D(reader.getColor(x, y)).oneInt());
+                                buffer.put((int) (x + y * image.getWidth()), new Vector3D(reader.getColor(x, y)).oneInt());
                             }
                         }
                 ));
@@ -120,28 +120,28 @@ public class FillIn implements PostProcess {
         IntStream.range(RANGE, (int) (image.getWidth() - RANGE)).parallel().forEach(x ->
                 IntStream.range(RANGE, (int) (image.getHeight() - RANGE)).forEach(y ->
                         {
-                            Vector4D color = new Vector4D();
+                            Vector3D color = new Vector3D();
                             for (int x1 = x - RANGE; x1 <= x + RANGE; x1++) {
                                 for (int y1 = y - RANGE; y1 <= y + RANGE; y1++) {
-                                    color.addMutable(new Vector4D(reader.getColor(x1, y1)));
+                                    color.addMutable(new Vector3D(reader.getColor(x1, y1)));
                                 }
                             }
 //                            color = IntStream.range(x - RANGE, x + RANGE).forEach(x1 ->
 //                                    IntStream.range(y - RANGE, y + RANGE).forEach(y1 -> {
-//                                return finalColor.add(new Vector4D(reader.getColor(x1, y1)));
+//                                return finalColor.add(new Vector3D(reader.getColor(x1, y1)));
 //                }));
 
                             // Step 2: Calculate sum of squared differences
                             double sumSquaredDiff = 0;
                             for (int x1 = x - RANGE; x1 <= x + RANGE; x1++) {
                                 for (int y1 = y - RANGE; y1 <= y + RANGE; y1++) {
-                                    Vector4D diff = new Vector4D(reader.getColor(x1, y1)).subtract(color);
+                                    Vector3D diff = new Vector3D(reader.getColor(x1, y1)).subtract(color);
                                     sumSquaredDiff += diff.dotProduct(diff);
                                 }
                             }
 //                            double sumSquaredDiff = IntStream.range(x - RANGE, x + RANGE).mapToDouble(x1 ->
 //                                    IntStream.range(y - RANGE, y + RANGE).mapToDouble(y1 -> {
-//                                        Vector4D diff = new Vector4D(reader.getColor(x1, y1)).subtract(color);
+//                                        Vector3D diff = new Vector3D(reader.getColor(x1, y1)).subtract(color);
 //                                        return diff.dotProduct(diff);
 //                                    }).sum()
 //                            ).sum();
@@ -152,17 +152,17 @@ public class FillIn implements PostProcess {
                             // Step 4: Calculate standard deviation
                             double standardDeviation = Math.sqrt(variance);
 
-                            if (/*color.subtract(new Vector4D(reader.getColor(x, y)))
-                                    .scalarDivide(RANGE * RANGE * 4 - 1).subtract(new Vector4D(reader.getColor(x, y)))
+                            if (/*color.subtract(new Vector3D(reader.getColor(x, y)))
+                                    .scalarDivide(RANGE * RANGE * 4 - 1).subtract(new Vector3D(reader.getColor(x, y)))
                                     .magnitude() > ACCEPTABLE_DIFF
                                     && */standardDeviation < MAX_ACCEPTABLE_STDEV) {
-                                color = color.subtract(new Vector4D(reader.getColor(x, y))).scalarDivide(RANGE * RANGE * 8);
+                                color = color.subtract(new Vector3D(reader.getColor(x, y))).scalarDivide(RANGE * RANGE * 8);
 
                                 buffer.put((int) (x + y * image.getWidth()), color.oneInt());
                             } else {
 //                                color.scalarDivide(RANGE * RANGE * 4);
 //                                buffer.put((int) (x + y * image.getWidth()), color.oneInt());
-                                buffer.put((int) (x + y * image.getWidth()), new Vector4D(reader.getColor(x, y)).oneInt());
+                                buffer.put((int) (x + y * image.getWidth()), new Vector3D(reader.getColor(x, y)).oneInt());
                             }
                         }
                 ));
@@ -183,10 +183,10 @@ public class FillIn implements PostProcess {
 //        IntStream.range(RANGE, (int) (image.getWidth() - RANGE)).parallel().forEach(x ->
 //                IntStream.range(RANGE, (int) (image.getHeight() - RANGE)).forEach(y ->
 //                        {
-//                            Vector4D color = new Vector4D(reader.getColor(x, y));
+//                            Vector3D color = new Vector3D(reader.getColor(x, y));
 //                            IntStream.range(x - RANGE, x + RANGE).forEach(x1 ->
 //                                    IntStream.range(y - RANGE, y + RANGE).forEach(y1 ->
-//                                                    color.add(new Vector4D(reader.getColor(x1, y1)))
+//                                                    color.add(new Vector3D(reader.getColor(x1, y1)))
 //                                    ));
 //                            color.scalarDivide(RANGE * RANGE);
 //                            buffer.put((int) (x + y * image.getWidth()), color.oneInt());

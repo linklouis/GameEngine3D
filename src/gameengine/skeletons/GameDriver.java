@@ -65,7 +65,7 @@ public abstract class GameDriver<GraphicsDriverType extends GraphicsDriver, Phys
                 updateFrameRateCounter(now);
 
                 updateGame();
-                physicsEngine.updateObjects();
+//                physicsEngine.updateObjects();
                 graphicsDriver.updateGraphics();
             }
         };

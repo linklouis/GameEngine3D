@@ -1,13 +1,12 @@
 package gameengine.threed.graphics.raytraceing;
 
 import gameengine.threed.graphics.Camera;
-import gameengine.threed.graphics.Visual3D;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayIntersectableList;
 import gameengine.threed.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.timeformatting.TimeConversionFactor;
 import gameengine.timeformatting.TimeFormatter;
 import gameengine.vectormath.Vector2D;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -71,10 +70,10 @@ public class RayTracedCamera extends Camera<RayTraceable> {
 
     /**
      * Constructs a new {@code RayTracedCamera} with a position given by a
-     * {@link Vector4D} and a specified field of view given in degrees.
+     * {@link Vector3D} and a specified field of view given in degrees.
      *
      * @param position The position of the {@code Camera} in space.
-     * @param direction a {@link Vector4D} representing the amount the
+     * @param direction a {@link Vector3D} representing the amount the
      *                  {@code Camera} is facing in each direction.
      * @param imageDimensions The resolution to render the image at.
      * @param maxBounces The maximum number of times a light ray can bounce
@@ -86,7 +85,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
      * @param fieldOfViewDegrees The number of degrees in the horizontal field
      *                           of view. Default value: 60.0
      */
-    public RayTracedCamera(final Vector4D position, final Vector4D direction,
+    public RayTracedCamera(final Vector3D position, final Vector3D direction,
                            final Vector2D imageDimensions,
                            final int maxBounces, final int raysPerPixel,
                            final boolean multiThreaded,
@@ -105,7 +104,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
      * coordinates and a default field of view of 60 degrees.
      *
      * @param position The position of the {@code Camera} in space.
-     * @param direction a {@link Vector4D} representing the amount the
+     * @param direction a {@link Vector3D} representing the amount the
      *                  {@code Camera} is facing in each direction.
      * @param imageDimensions The resolution to render the image at.
      * @param maxBounces The maximum number of times a light ray can bounce
@@ -115,7 +114,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
      * @param multiThreaded Whether the {@code Camera} should utilize
      *                      multithreading when rendering images.
      */
-    public RayTracedCamera(final Vector4D position, final Vector4D direction,
+    public RayTracedCamera(final Vector3D position, final Vector3D direction,
                            final Vector2D imageDimensions,
                            final int maxBounces, final int raysPerPixel,
                            final boolean multiThreaded) {
@@ -135,7 +134,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
      * @param x The position of the {@code Camera} on the x-axis.
      * @param y The position of the {@code Camera} on the y-axis.
      * @param z The position of the {@code Camera} on the z-axis.
-     * @param direction a {@link Vector4D} representing the amount the
+     * @param direction a {@link Vector3D} representing the amount the
      *                  {@code Camera} is facing in each direction.
      * @param imageDimensions The resolution to render the image at.
      * @param maxBounces The maximum number of times a light ray can bounce
@@ -148,7 +147,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
      *                           of view. Default value: 60.0
      */
     public RayTracedCamera(final double x, final double y, final double z,
-                           final Vector4D direction,
+                           final Vector3D direction,
                            final Vector2D imageDimensions,
                            final int maxBounces, final int raysPerPixel,
                            final boolean multiThreaded,
@@ -169,7 +168,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
      * @param x The position of the {@code Camera} on the x-axis.
      * @param y The position of the {@code Camera} on the y-axis.
      * @param z The position of the {@code Camera} on the z-axis.
-     * @param direction a {@link Vector4D} representing the amount the
+     * @param direction a {@link Vector3D} representing the amount the
      *                  {@code Camera} is facing in each direction.
      * @param imageDimensions The resolution to render the image at.
      * @param maxBounces The maximum number of times a light ray can bounce
@@ -180,7 +179,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
      *                      multithreading when rendering images.
      */
     public RayTracedCamera(final double x, final double y, final double z,
-                           final Vector4D direction,
+                           final Vector3D direction,
                            final Vector2D imageDimensions,
                            final int maxBounces, final int raysPerPixel,
                            final boolean multiThreaded) {
@@ -201,7 +200,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
     /**
      * Render a ray-traced image of the given objects.
      *
-     * @param renderableObjects The {@link Visual3D} of the objects to consider
+     * @param renderableObjects The {@link gameengine.threed.graphics.Renderable} of the objects to consider
      *                          for the scene.
      * @return The rendered scene as a {@link WritableImage}.
      */
@@ -349,7 +348,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
 
 
     /*
-     ** LightRay Tracing:
+     * LightRay Tracing:
      */
 
     /**
@@ -365,10 +364,10 @@ public class RayTracedCamera extends Camera<RayTraceable> {
         }
         if (firstCollision.getTexture().getColor().equals(Color.BLACK)
                 || firstCollision.getTexture().isLightSource()) {
-            return Vector4D.bytes(firstCollision.getColor());
+            return Vector3D.bytes(firstCollision.getColor());
         }
 
-        Vector4D averageColor = new Vector4D(0);
+        Vector3D averageColor = new Vector3D(0);
 
         for (int i = 0; i < raysPerPixel; i++) {
             averageColor.addMutable(
@@ -383,6 +382,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
     protected int calculatePixelColorInt(final LightRay startRay,
                                             final RayIntersectableList objectsInField) {
         RayTraceable firstCollision = (RayTraceable) startRay.firstCollision(objectsInField);
+//        System.out.println(firstCollision);
 
         if (firstCollision == null) {
             return 0;
@@ -392,7 +392,7 @@ public class RayTracedCamera extends Camera<RayTraceable> {
             return startRay.getReflected(firstCollision).getIncomingLight().oneInt();
         }
 
-        Vector4D averageColor = new Vector4D(0);
+        Vector3D averageColor = new Vector3D(0);
         for (int i = 0; i < raysPerPixel; i++) {
             averageColor.addMutable(
                             startRay.getReflected(firstCollision).getColor(

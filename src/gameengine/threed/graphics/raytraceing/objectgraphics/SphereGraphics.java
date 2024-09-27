@@ -1,70 +1,23 @@
 package gameengine.threed.graphics.raytraceing.objectgraphics;
 
-import gameengine.skeletons.GameObject;
-import gameengine.skeletons.Modifier;
 import gameengine.threed.geometry.Ray;
 import gameengine.threed.graphics.raytraceing.textures.RayTracingTexture;
-import gameengine.threed.prebuilt.objectmovement.InPlane3D;
-import gameengine.utilities.ArgumentContext;
-import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Supplier;
 
+/**
+ * Relationship: Sphere has a SphereGraphics
+ */
 public class SphereGraphics extends RayTraceable {
     private double radius;
     private double radiusSquared;
-    InPlane3D position = null;
+    Supplier<Vector3D> positionSupplier;
 
-
-    /*
-     * Construction:
-     */
-
-    public SphereGraphics() {
-        super();
-    }
-
-    public SphereGraphics(Modifier... modifiers) {
-        super(modifiers);
-    }
-    @Override
-    public List<Class<? extends Modifier>> getDependencies() {
-        return new ArrayList<>() {
-            {
-                add(InPlane3D.class);
-            }
-        };
-    }
-
-    @Override
-    public Vector4D[] getVertices() {
-        return new Vector4D[0];
-    }
-
-    @Override
-    public ArgumentContext[] getArgumentContexts() {
-        return new ArgumentContext[] {
-                new ArgumentContext(
-                        new ModifierInstantiateParameter<>(
-                                "radius", Double.class,
-                                this::setRadius),
-                        new ModifierInstantiateParameter<>(
-                                "texture", RayTracingTexture.class,
-                                this::setTexture)
-                )
-        };
-    }
-
-    @Override
-    public void instantiate(GameObject parent, Object... args) {
-        try {
-            super.instantiate(parent, args);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        position = getFromParent(InPlane3D.class);
+    public SphereGraphics(double radius, RayTracingTexture texture, Supplier<Vector3D> positionSupplier) {
+        super(texture);
+        setRadius(radius);
+        this.positionSupplier = positionSupplier;
     }
 
 
@@ -73,7 +26,7 @@ public class SphereGraphics extends RayTraceable {
      */
 
     @Override
-    public Vector4D surfaceNormal(Ray perspective) {
+    public Vector3D surfaceNormal(Ray perspective) {
         return perspective.getPosition().subtract(getCenter()).unitVector();
     }
 
@@ -183,7 +136,7 @@ public class SphereGraphics extends RayTraceable {
                 * 2 / lightRay.getDirection().magnitude();
         double d = b * b
                 - 4 * (lightRay.getPosition().distanceSquared(getCenter())
-                        - radius * radius);  // discriminant of quadratic
+                - radius * radius);  // discriminant of quadratic
 
 //        if (d <= 0) {
 //            return -1; // Solutions are complex, no intersections
@@ -216,11 +169,11 @@ public class SphereGraphics extends RayTraceable {
     }
 
     @Override
-    public Vector4D getCenter() {
-        return position.getLocation();
+    public Vector3D getCenter() {
+        return positionSupplier.get();
     }
 
-    public boolean contains(Vector4D point) {
+    public boolean contains(Vector3D point) {
         return point.distance(getCenter()) <= radius;
     }
 
@@ -241,5 +194,10 @@ public class SphereGraphics extends RayTraceable {
     @Override
     public double getRange() {
         return radius;
+    }
+
+    @Override
+    public Vector3D[] getVertices() {
+        return new Vector3D[0];
     }
 }

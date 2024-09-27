@@ -1,86 +1,28 @@
 package gameengine.threed.prebuilt.objectmovement.collisions;
 
+import gameengine.skeletons.DirectionalGameObject;
 import gameengine.skeletons.GameObject;
-import gameengine.skeletons.Modifier;
-import gameengine.threed.graphics.GraphicsObject3D;
-import gameengine.threed.graphics.Visual3D;
-import gameengine.threed.prebuilt.objectmovement.physics.PhysicsObject3D;
-import gameengine.twod.prebuilt.objectmovement.collisions.CollisionHandler;
-import gameengine.twod.prebuilt.objectmovement.collisions.PhysicsCollisionHandler;
-import gameengine.twod.prebuilt.objectmovement.physics.PhysicsObject2D;
-import gameengine.utilities.ArgumentContext;
-import gameengine.utilities.ModifierInstantiateParameter;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class Collider3D<ColliderType extends Collider3D<ColliderType>>  extends GraphicsObject3D {
-    private CollisionHandler<?> handler = null;
-
-
+public abstract class Collider3D<ColliderType extends Collider3D<ColliderType>> extends GameObject {
     /*
      * Construction:
      */
 
-    public Collider3D() {
-        super();
+    public Collider3D(Vector3D location) {
+        super(location);
     }
 
-    public Collider3D(Modifier... modifiers) {
-        super(modifiers);
-    }
-
-    @Override
-    public void instantiate(GameObject parent, Object... args) {
-        try {
-            super.instantiate(parent, args);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    @Override
-    public ArgumentContext[] getArgumentContexts() {
-        return new ArgumentContext[] {
-                new ArgumentContext(
-                        new ModifierInstantiateParameter<>(
-                                "collisionHandler", CollisionHandler.class,
-                                this::setHandler)
-//                        new ModifierInstantiateParameter<>(
-//                                "color", Color.class,
-//                                this::setColor)
-//                        new ModifierInstantiateParameter<>(
-//                                "range", Double.class,
-//                                this::setRange)
-                )
-        };
-    }
-
-    @Override
-    public List<Class<? extends Modifier>> getDependencies() {
-        List<Class<? extends Modifier>> modifiers = new ArrayList<>();
-        if (handler instanceof PhysicsCollisionHandler) {
-            modifiers.add(PhysicsObject3D.class);
-        }
-        return modifiers;
+    public Collider3D(double x, double y, double z) {
+        super(new Vector3D(x, y, z));
     }
 
 
     /*
      * Functionality:
      */
-
-    public boolean isColliding(GameObject gObj) {
-        assert gObj.containsModifier(getColliderClass());
-        return isColliding(gObj.get(getColliderClass()));
-    }
-
-    public boolean isColliding(PhysicsObject2D pObj) {
-        return isColliding(
-                pObj.getFromParent(getColliderClass()));
-    }
 
     public boolean inRange(Collider3D<?> collider) {
         return
@@ -116,7 +58,7 @@ public abstract class Collider3D<ColliderType extends Collider3D<ColliderType>> 
 
     public abstract boolean isColliding(ColliderType coll);
 
-    public abstract boolean contains(Vector4D point);
+    public abstract boolean contains(Vector3D point);
 
     public abstract double minX();
 
@@ -130,7 +72,7 @@ public abstract class Collider3D<ColliderType extends Collider3D<ColliderType>> 
 
     public abstract double maxZ();
 
-    public abstract Vector4D getCenter();
+    public abstract Vector3D getCenter();
 
     public abstract Class<ColliderType> getColliderClass();
 
@@ -163,20 +105,5 @@ public abstract class Collider3D<ColliderType extends Collider3D<ColliderType>> 
 
     public double getLength() {
         return maxZ() - minZ();
-    }
-
-    public CollisionHandler<?> getHandler() {
-        return handler;
-    }
-
-    public void setHandler(CollisionHandler<?> handler) {
-        if (getHandler() != null) {
-            this.handler = handler;
-        }
-    }
-
-    public GraphicsObject3D getAppearance() {
-        return getFromParent(Visual3D.class)
-                .getAppearance();
     }
 }

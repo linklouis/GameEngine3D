@@ -1,12 +1,11 @@
 package gameengine.threed.graphics;
 
-import gameengine.threed.graphics.raytraceing.postprocesses.PostProcess;
+import gameengine.skeletons.DirectionalGameObject;
 import gameengine.skeletons.GameObject;
-import gameengine.skeletons.Modifier;
-import gameengine.threed.prebuilt.objectmovement.InPlane3D;
-import gameengine.twod.graphics.Visual2D;
+import gameengine.threed.objectproperties.Moveable;
+import gameengine.threed.graphics.raytraceing.postprocesses.PostProcess;
 import gameengine.vectormath.Vector2D;
-import gameengine.vectormath.Vector4D;
+import gameengine.vectormath.Vector3D;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -14,7 +13,9 @@ import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A skeleton for a Camera that renders a 3D scene from a certain perspective.
@@ -22,12 +23,7 @@ import java.util.*;
  * @author Louis Link
  * @since 1.0
  */
-public abstract class Camera<VisualType extends GraphicsObject3D> extends GameObject {
-    /**
-     * a {@link Vector4D} representing the amount the {@code Camera} is facing
-     * in each direction.
-     */
-    private Vector4D direction;
+public abstract class Camera<VisualType extends Renderable> extends DirectionalGameObject implements Moveable {
     /**
      * The {@link WritableImage} the {@code Camera} will render the image on.
      */
@@ -55,46 +51,28 @@ public abstract class Camera<VisualType extends GraphicsObject3D> extends GameOb
      * Construction:
      */
 
-    public Camera(Vector4D position, Vector4D direction,
-                  final Vector2D imageDimensions, double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
-        super(new InPlane3D(), new Visual2D());
-        this.visualType = visualType;
-        get(InPlane3D.class).instantiate(this, position);
-
-        this.direction = direction.unitVector();
-        image = new WritableImage((int) imageDimensions.getX(), (int) imageDimensions.getY());
-        setFieldOfViewDegrees(fieldOfViewDegrees);
+    public Camera(Vector3D location, Vector3D direction, final Vector2D imageDimensions,
+                  double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
+        this(location, direction, (int) imageDimensions.getX(), (int) imageDimensions.getY(), fieldOfViewDegrees, visualType);
     }
 
-    public Camera(double x, double y, double z, Vector4D direction,
-                  Vector2D imageDimensions, double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
-        super(new InPlane3D(), new Visual2D());
-        this.visualType = visualType;
-        get(InPlane3D.class).instantiate(this, x, y, z);
-
-        this.direction = direction.unitVector();
-        image = new WritableImage((int) imageDimensions.getX(), (int) imageDimensions.getY());
-        setFieldOfViewDegrees(fieldOfViewDegrees);
+    public Camera(double x, double y, double z, Vector3D direction, Vector2D imageDimensions,
+                  double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
+        this(new Vector3D(x, y, z), direction, imageDimensions, fieldOfViewDegrees, visualType);
     }
 
-    public Camera(double x, double y, double z, Vector4D direction,
-                  int imageWidth, int imageHeight, double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
-        super(new InPlane3D(), new Visual2D());
+    public Camera(Vector3D location, Vector3D direction, int imageWidth, int imageHeight,
+                  double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
+        super(location, direction.unitVector());
         this.visualType = visualType;
-        get(InPlane3D.class).instantiate(this, x, y, z);
 
-        this.direction = direction.unitVector();
         image = new WritableImage(imageWidth, imageHeight);
         setFieldOfViewDegrees(fieldOfViewDegrees);
     }
 
-    @Override
-    public List<Class<? extends Modifier>> getDependencies() {
-        return new ArrayList<>() {
-            {
-                add(InPlane3D.class);
-            }
-        };
+    public Camera(double x, double y, double z, Vector3D direction, int imageWidth, int imageHeight,
+                  double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
+        this(new Vector3D(x, y, z), direction.unitVector(), imageWidth, imageHeight, fieldOfViewDegrees, visualType);
     }
 
 
@@ -106,14 +84,14 @@ public abstract class Camera<VisualType extends GraphicsObject3D> extends GameOb
      * Renders a new frame if it has been requested and applies
      * post-processing, otherwise returns.
      *
-     * @param renderableObjects The {@link Visual3D} objects to be rendered in
+     * @param renderableObjects The {@link HasRenderable} objects to be rendered in
      *                          the scene.
      * @return True if a new frame has been rendered, otherwise false.
      */
     public boolean update(Collection<VisualType> renderableObjects) {
         if (updateNeeded) {
-//            renderImage(renderableObjects);
-            renderWithProcessing(renderableObjects);
+            renderImage(renderableObjects);
+//            renderWithProcessing(renderableObjects);
             updateNeeded = false;
             return true;
         }
@@ -172,25 +150,24 @@ public abstract class Camera<VisualType extends GraphicsObject3D> extends GameOb
         return currentImage;
     }
 
-    protected List<? extends VisualType> getValidObjects(final Collection<Visual3D> visuals) {
-        return visuals.stream()
-                .filter(object ->
-                        object.getParent().containsModifier(visualType))
-                .map(object -> object.getFromParent(visualType))
-                .sorted(Comparator.comparingDouble(obj ->
-                    -getLocation().distance(obj.getCenter()))).toList();
-    }
+//    protected List<? extends VisualType> getValidObjects(final Collection<GameObject> visuals) {
+//        return visuals.stream()
+//                .filter(object -> object instanceof VisualType)
+//                .map(object -> object.getFromParent(visualType))
+//                .sorted(Comparator.comparingDouble(obj ->
+//                    -getLocation().distance(obj.getCenter()))).toList();
+//    }
 
-    public boolean canRender(final Visual3D visual) {
-        return visual.getParent().containsModifier(visualType);
-    }
+//    public boolean canRender(final Visual3D visual) {
+//        return visual.getParent().containsModifier(visualType);
+//    }
 
-    public Optional<VisualType> getRenderableFrom(final Visual3D visual) {
-        if (canRender(visual)) {
-            return Optional.of(visual.getFromParent(visualType));
-        }
-        return Optional.empty();
-    }
+//    public Optional<VisualType> getRenderableFrom(final Visual3D visual) {
+//        if (canRender(visual)) {
+//            return Optional.of(visual.getFromParent(visualType));
+//        }
+//        return Optional.empty();
+//    }
 
 
     /*
@@ -221,22 +198,6 @@ public abstract class Camera<VisualType extends GraphicsObject3D> extends GameOb
         setFieldOfView(Math.toDegrees(fieldOfViewRadians));
     }
 
-    public Vector4D getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Vector4D direction) {
-        this.direction = direction.unitVector();
-    }
-
-    public Vector4D getLocation() {
-        return get(InPlane3D.class).getLocation();
-    }
-
-    public void setLocation(Vector4D newLocation) {
-        get(InPlane3D.class).setLocation(newLocation);
-    }
-
     public WritableImage getImage() {
         return image;
     }
@@ -265,7 +226,7 @@ public abstract class Camera<VisualType extends GraphicsObject3D> extends GameOb
         getPostProcesses().add(process);
     }
 
-    public Class<? extends Modifier> getVisualType() {
-        return visualType;
-    }
+//    public Class<? extends Modifier> getVisualType() {
+//        return visualType;
+//    }
 }
