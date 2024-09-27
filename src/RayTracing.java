@@ -1,11 +1,9 @@
-import gameengine.drivers.GameDriver;
-import gameengine.graphics.raytraceing.*;
-import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
-import gameengine.graphics.raytraceing.textures.*;
 import gameengine.Objects.prebuilt.*;
-import gameengine.Objects.prebuilt.gameobjects.*;
-import gameengine.drivers.PhysicsEngine3D;
+import gameengine.drivers.GameDriver;
 import gameengine.drivers.GraphicsDriver;
+import gameengine.drivers.PhysicsEngine3D;
+import gameengine.graphics.raytraceing.RayTracedCamera;
+import gameengine.graphics.raytraceing.textures.*;
 import gameengine.utilities.timeformatting.TimeFormatter;
 import gameengine.utilities.vectormath.Vector2D;
 import gameengine.utilities.vectormath.Vector3D;
@@ -14,7 +12,7 @@ import javafx.scene.paint.Color;
 import java.util.Random;
 import java.util.function.Function;
 
-public class RayTracing extends GameDriver<GraphicsDriver<RayTraceable>, PhysicsEngine3D> {
+public class RayTracing extends GameDriver {
     private final static int SIZE = 400;
     private int renders = 0;
     private long avTime = 0;
@@ -29,7 +27,7 @@ public class RayTracing extends GameDriver<GraphicsDriver<RayTraceable>, Physics
      */
 
     public RayTracing() {
-        super("LightRay Tracing", new GraphicsDriver<>(SIZE, SIZE,
+        super("LightRay Tracing", new GraphicsDriver(SIZE, SIZE,
                         new RayTracedCamera(-2, -10, -10, new Vector3D(0.8, 3, 1.8),
                                 new Vector2D(/*2000, 2000*//*1000, 1000*/700, 700/*1280, 720*//*1920.0, 1080.0*/),
                                 10, 10, true, 70/*180*/)),
@@ -49,12 +47,14 @@ public class RayTracing extends GameDriver<GraphicsDriver<RayTraceable>, Physics
 
 //        colorSpace();
 //        ballReflectionTests();
-        ballSubsurfaceTests();
+//        ballSubsurfaceTests();
 //        ballReflectionTestsInfinite();
 //        sphereDistTest();
-//        setupScene1();
+        setupScene1();
 //        scene1Subsurface();
 //        setupGrassScene();
+
+//        initDebugVisuals();
 
 
 //        setupRandSphere(100, (color -> new BaseTexture(color, /*Math.random()*/0)), 1);

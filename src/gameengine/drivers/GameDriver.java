@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class GameDriver<GraphicsDriverType extends GraphicsDriver, PhysicsEngineType extends PhysicsEngine> extends Application {
+public abstract class GameDriver extends Application {
     private final List<GameObject> objects = new ArrayList<>();
-    private final GraphicsDriverType graphicsDriver;
-    private final PhysicsEngineType physicsEngine;
+    private final GraphicsDriver graphicsDriver;
+    private final PhysicsEngine3D physicsEngine;
     private AnimationTimer animationTimer;
     private final String name;
 
@@ -28,14 +28,14 @@ public abstract class GameDriver<GraphicsDriverType extends GraphicsDriver, Phys
      * Construction:
      */
 
-    public GameDriver(GraphicsDriverType graphicsDriver, PhysicsEngineType physicsEngine) {
+    public GameDriver(GraphicsDriver graphicsDriver, PhysicsEngine3D physicsEngine) {
         this.graphicsDriver = graphicsDriver;
         this.physicsEngine = physicsEngine;
         physicsEngine.setFrameRateSupplier(getFrameRateSupplier());
         name = "New Game";
     }
 
-    public GameDriver(String name, GraphicsDriverType graphicsDriver, PhysicsEngineType physicsEngine) {
+    public GameDriver(String name, GraphicsDriver graphicsDriver, PhysicsEngine3D physicsEngine) {
         this.graphicsDriver = graphicsDriver;
         this.physicsEngine = physicsEngine;
         physicsEngine.setFrameRateSupplier(getFrameRateSupplier());
@@ -112,11 +112,11 @@ public abstract class GameDriver<GraphicsDriverType extends GraphicsDriver, Phys
         return objects;
     }
 
-    public GraphicsDriverType getGraphicsDriver() {
+    public GraphicsDriver getGraphicsDriver() {
         return graphicsDriver;
     }
 
-    public PhysicsEngineType getPhysicsEngine() {
+    public PhysicsEngine3D getPhysicsEngine() {
         return physicsEngine;
     }
 

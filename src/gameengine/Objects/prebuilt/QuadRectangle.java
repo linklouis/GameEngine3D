@@ -7,6 +7,8 @@ import gameengine.Objects.objectmovement.collisions.PolyObject;
 import gameengine.utilities.vectormath.Vector3D;
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
+
 public class QuadRectangle extends PolyObject<Quad> {
     private RayTracingTexture texture;
 

@@ -64,7 +64,7 @@ public abstract class Camera<VisualType extends Renderable> extends DirectionalG
 
     public Camera(Vector3D location, Vector3D direction, int imageWidth, int imageHeight,
                   double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
-        super(location, direction.unitVector());
+        super(location, direction);
         this.visualType = visualType;
 
         image = new WritableImage(imageWidth, imageHeight);
@@ -73,7 +73,7 @@ public abstract class Camera<VisualType extends Renderable> extends DirectionalG
 
     public Camera(double x, double y, double z, Vector3D direction, int imageWidth, int imageHeight,
                   double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
-        this(new Vector3D(x, y, z), direction.unitVector(), imageWidth, imageHeight, fieldOfViewDegrees, visualType);
+        this(new Vector3D(x, y, z), direction, imageWidth, imageHeight, fieldOfViewDegrees, visualType);
     }
 
 

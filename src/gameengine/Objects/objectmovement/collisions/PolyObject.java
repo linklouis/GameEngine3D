@@ -8,7 +8,7 @@ import gameengine.Objects.prebuilt.Polygon;
 import gameengine.utilities.vectormath.Vector3D;
 
 public abstract class PolyObject<PolyType extends Polygon<? extends RayTraceable>> extends GameObject {
-    private Mesh<PolyType> mesh;
+    private final Mesh<PolyType> mesh;
 
     public PolyObject(Vector3D location, Mesh<PolyType> mesh) {
         super(location);
@@ -22,7 +22,7 @@ public abstract class PolyObject<PolyType extends Polygon<? extends RayTraceable
 
     public PolyObject(Vector3D location, Vector3D[] vertices) {
         super(location);
-        this.mesh = new Mesh(createMesh(vertices), vertices);
+        this.mesh = new Mesh<>(createMesh(vertices), vertices);
 //        try {
 //            get(Mesh.class).instantiate(this, createMesh(vertices), vertices);
 //        } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -31,7 +31,7 @@ public abstract class PolyObject<PolyType extends Polygon<? extends RayTraceable
     }
 
     public void initiate(GameDriver driver) {
-        for (Polygon poly : mesh.getPolygons()) {
+        for (Polygon<? extends RayTraceable> poly : mesh.getPolygons()) {
             driver.newObject(poly);
         }
     }
