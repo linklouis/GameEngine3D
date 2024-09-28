@@ -2,7 +2,7 @@ package gameengine.geometry;
 
 import gameengine.utilities.vectormath.Vector3D;
 
-public interface RayIntersectable extends VectorLineIntersectable {
+public interface RayIntersectable {
     /**
      * Finds the first intersection a lightRay will have with the
      * {@code Collider3D}.
@@ -17,17 +17,9 @@ public interface RayIntersectable extends VectorLineIntersectable {
      */
     double distanceToCollide(Ray ray, double curSmallestDist, double amountInDirection);
 
-    default double distanceToCollide(Ray ray, double curSmallestDist) {
-        return distanceToCollide(ray, curSmallestDist,
-                ray.getDirection().dotWithSubtracted(ray.getPosition(), getCenter()));
-    }
-
     double getRange();
 
-    default double closestDistTo(Vector3D point) {
-//        System.out.println(getCenter().distance(point) + ", " + getRange());
-        return getCenter().distance(point) - getRange();
-    }
+    Vector3D getCenter();
 
     /**
      * Returns the normal vector of the intersectable object facing towards the
@@ -38,7 +30,13 @@ public interface RayIntersectable extends VectorLineIntersectable {
      */
     Vector3D surfaceNormal(Ray perspective);
 
-    default boolean willCollide(VectorLine3D line) {
-        return distanceToCollide((Ray) line, Double.MAX_VALUE) > 0;
+    default double distanceToCollide(Ray ray, double curSmallestDist) {
+        return distanceToCollide(ray, curSmallestDist,
+                ray.getDirection().dotWithSubtracted(ray.getPosition(), getCenter()));
+    }
+
+    default double closestDistTo(Vector3D point) {
+//        System.out.println(getCenter().distance(point) + ", " + getRange());
+        return getCenter().distance(point) - getRange();
     }
 }

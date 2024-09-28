@@ -36,11 +36,11 @@ public record Rect3D(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3, Vecto
         return new Rect3D(vertex1, vertex2, vertex3, vertex4);
     }
 
-    public double distanceToCollide(VectorLine3D ray) {
+    public double distanceToCollide(Ray ray) {
         return normal.distToCollidePlane(vertex1, ray.getPosition(), ray.getDirection());
     }
 
-    public double distanceToCollide(VectorLine3D ray, double dirDotNorm) {
+    public double distanceToCollide(Ray ray, double dirDotNorm) {
         return normal.dotWithSubtracted(vertex1, ray.getPosition()) / dirDotNorm;
     }
 
@@ -48,7 +48,7 @@ public record Rect3D(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3, Vecto
         return planeCoords.contains(onPlane(point));
     }
 
-    public boolean contains(final VectorLine3D line, double distance) {
+    public boolean contains(final Ray line, double distance) {
 //        Vector3D point = line.pointAtDistance(distance);
 //        if (point.distance(vertex1) > range) {
 //            return false;
@@ -61,7 +61,7 @@ public record Rect3D(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3, Vecto
         return other.projectToPlane(planeXaxis, planeYaxis);
     }
 
-    public Vector2D onPlane(final VectorLine3D line, double distance) {
+    public Vector2D onPlane(final Ray line, double distance) {
         return line.getPosition().projectToPlane(planeXaxis, planeYaxis, line.getDirection(), distance);
     }
 

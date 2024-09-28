@@ -15,7 +15,6 @@ import java.util.function.Supplier;
 public abstract class GameDriver extends Application {
     private final List<GameObject> objects = new ArrayList<>();
     private final GraphicsDriver graphicsDriver;
-    private final PhysicsEngine3D physicsEngine;
     private AnimationTimer animationTimer;
     private final String name;
 
@@ -28,17 +27,13 @@ public abstract class GameDriver extends Application {
      * Construction:
      */
 
-    public GameDriver(GraphicsDriver graphicsDriver, PhysicsEngine3D physicsEngine) {
+    public GameDriver(GraphicsDriver graphicsDriver) {
         this.graphicsDriver = graphicsDriver;
-        this.physicsEngine = physicsEngine;
-        physicsEngine.setFrameRateSupplier(getFrameRateSupplier());
         name = "New Game";
     }
 
-    public GameDriver(String name, GraphicsDriver graphicsDriver, PhysicsEngine3D physicsEngine) {
+    public GameDriver(String name, GraphicsDriver graphicsDriver) {
         this.graphicsDriver = graphicsDriver;
-        this.physicsEngine = physicsEngine;
-        physicsEngine.setFrameRateSupplier(getFrameRateSupplier());
         this.name = name;
     }
 
@@ -65,10 +60,9 @@ public abstract class GameDriver extends Application {
         return new AnimationTimer() {
             @Override
             public void handle(long now) {
-                updateFrameRateCounter(now);
+//                updateFrameRateCounter(now);
 
                 updateGame();
-//                physicsEngine.updateObjects();
                 graphicsDriver.updateGraphics();
             }
         };
@@ -84,18 +78,12 @@ public abstract class GameDriver extends Application {
         if (frameRate < 1 || frameRate > 500) {
             frameRate = 1_000_000_000.0 / (now - frameTimes[(frameTimeIndex == 0 ? frameTimes.length : frameTimeIndex) - 1]);
         }
-//        System.out.println(frameRate);
     }
 
     public void newObject(GameObject object) {
-//        if (object instanceof PhysicsObject3D)) {
-//            getPhysicsEngine().add(object);
-//        }
-//        if (object.containsModifier(Visual3D.class)) {
         if (object instanceof HasRenderable<?>) {
-            getGraphicsDriver().add(((HasRenderable<? extends RayTraceable>) object).getRenderable());
+            getGraphicsDriver().add(((HasRenderable<RayTraceable>) object).getRenderable());
         }
-
         getObjects().add(object);
     }
 
@@ -116,19 +104,11 @@ public abstract class GameDriver extends Application {
         return graphicsDriver;
     }
 
-    public PhysicsEngine3D getPhysicsEngine() {
-        return physicsEngine;
-    }
-
     public String getName() {
         return name;
     }
 
     public double getFrameRate() {
         return frameRate;
-    }
-
-    public Supplier<Double> getFrameRateSupplier() {
-        return this::getFrameRate;
     }
 }

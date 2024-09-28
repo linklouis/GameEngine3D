@@ -1,7 +1,6 @@
 import gameengine.Objects.prebuilt.*;
 import gameengine.drivers.GameDriver;
 import gameengine.drivers.GraphicsDriver;
-import gameengine.drivers.PhysicsEngine3D;
 import gameengine.graphics.raytraceing.RayTracedCamera;
 import gameengine.graphics.raytraceing.textures.*;
 import gameengine.utilities.timeformatting.TimeFormatter;
@@ -30,8 +29,7 @@ public class RayTracing extends GameDriver {
         super("LightRay Tracing", new GraphicsDriver(SIZE, SIZE,
                         new RayTracedCamera(-2, -10, -10, new Vector3D(0.8, 3, 1.8),
                                 new Vector2D(/*2000, 2000*//*1000, 1000*/700, 700/*1280, 720*//*1920.0, 1080.0*/),
-                                10, 10, 70 /*180*/)),
-                new PhysicsEngine3D());
+                                10, 10, 70 /*180*/)));
     }
 
     public static void main(String[] args) {

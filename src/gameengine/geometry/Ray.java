@@ -5,15 +5,24 @@ import gameengine.graphics.raytraceing.objectgraphics.RayIntersectableList;
 import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.utilities.vectormath.Vector3D;
 
-import java.util.LinkedHashMap;
+public class Ray {
+    /**
+     * The direction the {@code Line} moves.
+     */
+    private Vector3D direction;
+    /**
+     * The current position of the {@code Line}.
+     */
+    protected Vector3D position;
 
-public class Ray extends VectorLine3D {
     public Ray(final Vector3D startPosition, final Vector3D direction) {
-        super(startPosition, direction);
+        this.direction = direction.unitVector();
+        this.position = startPosition;
     }
 
     public Ray(Ray parent) {
-        super(parent.getPosition(), parent.getDirection());
+        this.direction = parent.getDirection();
+        this.position = parent.getPosition();
     }
 
     /**
@@ -81,59 +90,6 @@ public class Ray extends VectorLine3D {
         }
     }
 
-    /*
-    Problems with old version:
-        Unnecessary intersectable setting (i.e. closestDist = Double.MAX_VALUE)
-        Unnecessary checks (i.e. is first collision distance less than Double.MAX_VALUE, etc.)
-     */
-//    public RayIntersectable firstCollision(final RayIntersectableList objectsInField) {
-//        double closestDist = Double.MAX_VALUE;
-//        RayIntersectable closest = null;
-//        double newDistance;
-//        double amountInDirec;
-//        Vector3D toCenter;
-//
-//        for (RayIntersectableList.Element element = objectsInField.getHead();
-//             element != null; element = element.next()) {
-//
-//            toCenter = position.subtract(element.intersectable().getCenter());
-//            amountInDirec = getDirection().dotProduct(toCenter);
-////            if (amountInDirec < 0.5 && toCenter.magnitude() - element.intersectable().getRange() < closestDist) {
-//                newDistance = element.intersectable().distanceToCollide(this, closestDist, amountInDirec);
-//                if (newDistance >= 0 && newDistance < closestDist) {
-//                    closestDist = newDistance;
-//                    closest = element.intersectable();
-//                }
-////            }
-//        }
-//
-//        if (closest != null) {
-//            position = position.addMultiplied(getDirection(),closestDist - 0.01);
-//        }
-//
-//        return closest;
-//    }
-
-
-    public LinkedHashMap<RayTraceable, Ray> getCollisions(final int maxBounces,
-                                                          final RayIntersectableList objectsInField) {
-        LinkedHashMap<RayTraceable, Ray> map = new LinkedHashMap<>(maxBounces);
-        RayTraceable collision;
-
-        for (int bounces = 2; bounces <= maxBounces; bounces++) {
-            collision = (RayTraceable) firstCollision(objectsInField);
-
-            if (collision == null) {
-                return null;
-            }
-
-            map.put(collision, new Ray(this));
-            reflect(collision);
-        }
-
-        return map;
-    }
-
     /**
      * Updates the {@code Ray}'s direction based on its reflection of off the
      * given {@link RayTraceable}.
@@ -155,5 +111,39 @@ public class Ray extends VectorLine3D {
      */
     public Ray getReflected(RayTraceable collider) {
         return new Ray(position, collider.reflection((LightRay) this).direction());
+    }
+
+    public Vector3D pointAtDistance(double distance) {
+        return position.addMultiplied(direction, distance);
+    }
+
+
+    /*
+     * Utilities:
+     */
+
+    public void toDistance(double distance) {
+        position = position.addMultiplied(direction, distance);
+//        position.x += direction.x * distance;
+//        position.y += direction.y * distance;
+//        position.z += direction.z * distance;
+//        position.magnitude = Double.NaN;
+//                Math.sqrt(
+//                position.x * position.x
+//                        + position.y * position.y
+//                        + position.z * position.z);
+//        System.out.println(position);
+    }
+
+    public Vector3D getDirection() {
+        return direction;
+    }
+
+    protected void setDirection(Vector3D direction) {
+        this.direction = direction.unitVector();
+    }
+
+    public Vector3D getPosition() {
+        return position;
     }
 }
