@@ -1,7 +1,7 @@
 package gameengine.graphics.raytraceing;
 
 import gameengine.geometry.Ray;
-import gameengine.graphics.raytraceing.objectgraphics.RayIntersectableList;
+import gameengine.graphics.raytraceing.objectgraphics.TraceableObjectList;
 import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.utilities.vectormath.Vector3D;
 import javafx.scene.paint.Color;
@@ -63,7 +63,7 @@ public class LightRay extends Ray {
     }
 
     public Vector3D getColor(final int maxBounces,
-                             final RayIntersectableList objectsInField, int startingBounce) {
+                             final TraceableObjectList objectsInField, int startingBounce) {
         RayTraceable collision;
 
         for (int bounces = startingBounce; bounces <= maxBounces; bounces++) {

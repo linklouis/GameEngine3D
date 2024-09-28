@@ -1,6 +1,6 @@
 package gameengine.graphics.raytraceing;
 
-import gameengine.graphics.raytraceing.objectgraphics.RayIntersectableList;
+import gameengine.graphics.raytraceing.objectgraphics.TraceableObjectList;
 import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.utilities.vectormath.Vector2D;
 import gameengine.utilities.vectormath.Vector3D;
@@ -114,14 +114,14 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
     private int numRenders = 0;
     private final PixelReader reader = getImage().getPixelReader();
 
-    @Override
-    protected void updateImage(PixelWriter writer) {
-        writer.setPixels(0, 0, getWidth(), getHeight(), PixelFormat.getIntArgbInstance(), buffer, getWidth());
-        numRenders++;
-    }
+//    @Override
+//    protected void updateImage(PixelWriter writer) {
+//        writer.setPixels(0, 0, getWidth(), getHeight(), PixelFormat.getIntArgbInstance(), buffer, getWidth());
+//        numRenders++;
+//    }
 
 //    @Override
-//    protected void renderPixel(int pixelIndex, RayIntersectableList objects) {
+//    protected void renderPixel(int pixelIndex, TraceableObjectList objects) {
 //        buffer.put(
 //                pixelIndex,
 //                new Vector3D(calculatePixelColor(rayTo(pixelIndex), objects,
@@ -133,7 +133,7 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
 //    }
 //
 //    protected Vector3D calculatePixelColor(final LightRay startRay,
-//                                        final RayIntersectableList objectsInField,
+//                                        final TraceableObjectList objectsInField,
 //                                        final Vector3D averageColor) {
 //        RayTraceable firstCollision = (RayTraceable) startRay.firstCollision(objectsInField);
 //
@@ -164,14 +164,14 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
     private final Vector3D[] colors = new Vector3D[getWidth() * getHeight()];
 
 //    @Override
-    protected void renderPixel(int pixelIndex, RayIntersectableList objects) {
+    protected void renderPixel(int pixelIndex, TraceableObjectList objects) {
         calculatePixelColorVector(rayTo(pixelIndex), objects, colors[pixelIndex]);
         buffer.put(pixelIndex, colors[pixelIndex].scalarDivide(numRenders).oneInt());
 //        colors[pixelIndex] = color;
     }
 
     protected void calculatePixelColorVector(final LightRay startRay,
-                                                 final RayIntersectableList objectsInField,
+                                                 final TraceableObjectList objectsInField,
                                                  Vector3D averageColor) {
         RayTraceable firstCollision = (RayTraceable) startRay.firstCollision(objectsInField);
 

@@ -3,7 +3,7 @@ package gameengine.graphics.raytraceing;
 import gameengine.Objects.DirectionalGameObject;
 import gameengine.Objects.objectproperties.Moveable;
 import gameengine.graphics.Camera;
-import gameengine.graphics.raytraceing.objectgraphics.RayIntersectableList;
+import gameengine.graphics.raytraceing.objectgraphics.TraceableObjectList;
 import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.graphics.raytraceing.postprocesses.PostProcess;
 import gameengine.utilities.timeformatting.TimeConversionFactor;
@@ -68,7 +68,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
     private long renderTime;
     protected IntBuffer buffer;
     private double scaleX;
-    private RayIntersectableList objects;
+    private TraceableObjectList objects;
     private PixelWriter writer;
     private int numPixels;
 //    private
@@ -169,7 +169,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      */
 
     public void updateObjects(final Collection<RayTraceable> renderableObjects) {
-        objects = new RayIntersectableList(
+        objects = new TraceableObjectList(
                 renderableObjects.stream().sorted(Comparator.comparingDouble((RayTraceable obj) -> obj.closestDistTo(getLocation()))).toArray(RayTraceable[]::new), getLocation());
     }
 
@@ -180,7 +180,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
         long startTime = System.nanoTime();
 
         IntStream.range(0, numPixels).parallel().forEach(pixelIndex ->
-                buffer.put(pixelIndex, calculatePixelColorInt(rayTo(pixelIndex), objects)));
+                buffer.put(pixelIndex, calculatePixelColor(rayTo(pixelIndex), objects)));
         writer.setPixels(0, 0, getWidth(), getHeight(), PixelFormat.getIntArgbInstance(), buffer, getWidth());
 
         renderTime = System.nanoTime() - startTime;
@@ -220,8 +220,8 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      * @return The average color of each ray to measure based on
      * {@link #raysPerPixel}.
      */
-    protected int calculatePixelColorInt(final LightRay startRay, final RayIntersectableList objectsInField) {
-        RayTraceable firstCollision = (RayTraceable) startRay.firstCollision(objectsInField);
+    protected int calculatePixelColor(final LightRay startRay, final TraceableObjectList objectsInField) {
+        RayTraceable firstCollision = startRay.firstCollision(objectsInField);
 
         if (firstCollision == null) {
             return 0;

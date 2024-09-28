@@ -1,7 +1,7 @@
 package gameengine.geometry;
 
 import gameengine.graphics.raytraceing.LightRay;
-import gameengine.graphics.raytraceing.objectgraphics.RayIntersectableList;
+import gameengine.graphics.raytraceing.objectgraphics.TraceableObjectList;
 import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.utilities.vectormath.Vector3D;
 
@@ -33,8 +33,8 @@ public class Ray {
      *                       potentially collide with.
      * @return The closest {@link RayTraceable} the {@code LightRay} can collide with.
      */
-    public RayIntersectable firstCollision(final RayIntersectableList objectsInField) {
-        RayIntersectableList.Element element = objectsInField.getHead();
+    public RayTraceable firstCollision(final TraceableObjectList objectsInField) {
+        TraceableObjectList.Element element = objectsInField.getHead();
 
         // No objects, return.
         if (element == null) {
@@ -61,7 +61,7 @@ public class Ray {
             toDistance(closestDist - 0.01);
             return element.intersectable();
         }
-        RayIntersectable closest = element.intersectable();
+        RayTraceable closest = element.intersectable();
         element = element.next();
         double newDistance;
         Vector3D toCenter;
