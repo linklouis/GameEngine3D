@@ -30,7 +30,7 @@ public class RayTracing extends GameDriver {
         super("LightRay Tracing", new GraphicsDriver(SIZE, SIZE,
                         new RayTracedCamera(-2, -10, -10, new Vector3D(0.8, 3, 1.8),
                                 new Vector2D(/*2000, 2000*//*1000, 1000*/700, 700/*1280, 720*//*1920.0, 1080.0*/),
-                                10, 10, true, 70/*180*/)),
+                                10, 10, 70 /*180*/)),
                 new PhysicsEngine3D());
     }
 
@@ -848,7 +848,7 @@ public class RayTracing extends GameDriver {
 //        mainCam.setDirection(spiral(Math.TAU, angle));
 //        angle += 0.1;
 
-//        mainCam.setLocation(mainCam.getLocation().add(new Vector3D(0, 0.15, 0)));
+        mainCam.setLocation(mainCam.getLocation().add(new Vector3D(0, 0.15, 0)));
 //        mainCam.setDirection(mainCam.getDirection().add(new Vector3D(0, -0.01, 0)));
 //        for (GraphicsObject3D object : getGraphicsDriver().getCameraObjects()) {
 //                InPlane3D loc = object.getFromParent(InPlane3D.class);
@@ -859,7 +859,7 @@ public class RayTracing extends GameDriver {
             if (renders >= NUM_TO_TEST * (0.5 - PERCENT_TO_TAKE / 2)
                     && renders <= NUM_TO_TEST * (0.5 + PERCENT_TO_TAKE / 2)) {
                 avTime += mainCam.getRenderTime();
-                System.out.println("measured");
+//                System.out.println("measured");
             }
             if (renders > 0 && mainCam.getRenderTime() < minTime) {
                 minTime = mainCam.getRenderTime();

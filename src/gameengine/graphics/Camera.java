@@ -4,6 +4,7 @@ import gameengine.Objects.DirectionalGameObject;
 import gameengine.Objects.objectproperties.HasRenderable;
 import gameengine.Objects.objectproperties.Moveable;
 import gameengine.Objects.objectproperties.Renderable;
+import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.graphics.raytraceing.postprocesses.PostProcess;
 import gameengine.utilities.vectormath.Vector2D;
 import gameengine.utilities.vectormath.Vector3D;
@@ -44,8 +45,6 @@ public abstract class Camera<VisualType extends Renderable> extends DirectionalG
      */
     private final List<PostProcess> postProcesses = new ArrayList<>();
 
-    private final Class<? extends VisualType> visualType;
-
 
 
     /*
@@ -53,27 +52,26 @@ public abstract class Camera<VisualType extends Renderable> extends DirectionalG
      */
 
     public Camera(Vector3D location, Vector3D direction, final Vector2D imageDimensions,
-                  double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
-        this(location, direction, (int) imageDimensions.getX(), (int) imageDimensions.getY(), fieldOfViewDegrees, visualType);
+                  double fieldOfViewDegrees) {
+        this(location, direction, (int) imageDimensions.getX(), (int) imageDimensions.getY(), fieldOfViewDegrees);
     }
 
     public Camera(double x, double y, double z, Vector3D direction, Vector2D imageDimensions,
-                  double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
-        this(new Vector3D(x, y, z), direction, imageDimensions, fieldOfViewDegrees, visualType);
+                  double fieldOfViewDegrees) {
+        this(new Vector3D(x, y, z), direction, imageDimensions, fieldOfViewDegrees);
     }
 
     public Camera(Vector3D location, Vector3D direction, int imageWidth, int imageHeight,
-                  double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
+                  double fieldOfViewDegrees) {
         super(location, direction);
-        this.visualType = visualType;
 
         image = new WritableImage(imageWidth, imageHeight);
         setFieldOfViewDegrees(fieldOfViewDegrees);
     }
 
     public Camera(double x, double y, double z, Vector3D direction, int imageWidth, int imageHeight,
-                  double fieldOfViewDegrees, Class<? extends VisualType> visualType) {
-        this(new Vector3D(x, y, z), direction, imageWidth, imageHeight, fieldOfViewDegrees, visualType);
+                  double fieldOfViewDegrees) {
+        this(new Vector3D(x, y, z), direction, imageWidth, imageHeight, fieldOfViewDegrees);
     }
 
 
@@ -91,7 +89,7 @@ public abstract class Camera<VisualType extends Renderable> extends DirectionalG
      */
     public boolean update(Collection<VisualType> renderableObjects) {
         if (updateNeeded) {
-            renderImage(renderableObjects);
+            renderImage(/*renderableObjects*/);
 //            renderWithProcessing(renderableObjects);
             updateNeeded = false;
             return true;
@@ -104,10 +102,11 @@ public abstract class Camera<VisualType extends Renderable> extends DirectionalG
     }
 
     public void renderWithProcessing(Collection<VisualType> renderableObjects) {
-        image = applyPostProcessing(renderImage(renderableObjects));
+        image = applyPostProcessing(renderImage(/*renderableObjects*/));
     }
 
-    public abstract WritableImage renderImage(Collection<VisualType> renderableObjects);
+    public abstract WritableImage renderImage(/*Collection<VisualType> renderableObjects*/);
+    public abstract void updateObjects(final Collection<RayTraceable> renderableObjects);
 
     public void requestUpdate() {
         updateNeeded = true;

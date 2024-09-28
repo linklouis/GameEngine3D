@@ -28,7 +28,7 @@ public final class RayIntersectableList {
         }
     }
 
-    public record Element(RayIntersectable value, Element next, double dist) {
+    public record Element(RayIntersectable intersectable, Element next, double dist) {
         public boolean hasNext() {
             return next != null;
         }

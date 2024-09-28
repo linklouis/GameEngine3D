@@ -69,6 +69,7 @@ public class GraphicsDriver {
 
     public void add(RayTraceable newObject) {
         visualObjects.add(newObject);
+        camera.updateObjects(getVisualObjects());
 //        if (camera.canRender(newObject)) {
 //            cameraObjects.add(newObject);
 //        }

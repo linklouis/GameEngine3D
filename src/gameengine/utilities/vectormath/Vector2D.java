@@ -159,7 +159,7 @@ public class Vector2D implements Vector<Vector2D> {
     }
 
     /**
-     * @return a Vector2D with only the component with the largest value
+     * @return a Vector2D with only the component with the largest intersectable
      * preserved, and all others set to 0.
      */
     @Override
@@ -171,7 +171,7 @@ public class Vector2D implements Vector<Vector2D> {
     }
 
     /**
-     * @return a Vector2D with only the component with the smallest value
+     * @return a Vector2D with only the component with the smallest intersectable
      * preserved, and all others set to 0.
      */
     @Override

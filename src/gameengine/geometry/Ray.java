@@ -8,8 +8,6 @@ import gameengine.utilities.vectormath.Vector3D;
 import java.util.LinkedHashMap;
 
 public class Ray extends VectorLine3D {
-
-
     public Ray(final Vector3D startPosition, final Vector3D direction) {
         super(startPosition, direction);
     }
@@ -29,60 +27,63 @@ public class Ray extends VectorLine3D {
     public RayIntersectable firstCollision(final RayIntersectableList objectsInField) {
         RayIntersectableList.Element element = objectsInField.getHead();
 
+        // No objects, return.
         if (element == null) {
             return null;
         }
         // Set the closest distance to the distance of the first object.
-        double closestDist = element.value().distanceToCollide(this,
-                getDirection().dotWithSubtracted(position, element.value().getCenter()));
+        double closestDist = element.intersectable().distanceToCollide(this,
+                getDirection().dotWithSubtracted(position, element.intersectable().getCenter()));
 
         // While the distance of the closest collision either doesn't exist or is behind the ray,
-        // keep finding the next distance.
+        // check the next distance.
+        // Attempting to get as far into the list as possible without having to start the heavier computations.
         while (Double.isNaN(closestDist) || closestDist < 0) {
-            if (element.next() == null) {
+            if ((element = element.next()) == null) {
+                // List contained no potential colliders
                 return null;
             }
-            element = element.next();
-            closestDist = element.value().distanceToCollide(this,
-                    getDirection().dotWithSubtracted(position, element.value().getCenter()));
+            closestDist = element.intersectable().distanceToCollide(this,
+                    getDirection().dotWithSubtracted(position, element.intersectable().getCenter()));
         }
 
         // If the current element is the last one, early exit.
         if (element.isLast()) {
             toDistance(closestDist - 0.01);
-            return element.value();
+            return element.intersectable();
         }
-        RayIntersectable closest = element.value();
+        RayIntersectable closest = element.intersectable();
         element = element.next();
         double newDistance;
         Vector3D toCenter;
 
         // While there are more objects in the scene,
-        // if that object is closer than the current closest distance, check the distance it collides at,
+        // if the current object is closer than the closest distance found yet,
+        // check the distance it collides at,
         // and if that's also closer, take this object instead.
         while (true) {
-            toCenter = position.subtract(element.value().getCenter());
+            toCenter = position.subtract(element.intersectable().getCenter());
 
-            if (toCenter.magnitude() - element.value().getRange() < closestDist) {
-                newDistance = element.value().distanceToCollide(this, closestDist,
+            if (toCenter.magnitude() - element.intersectable().getRange() < closestDist) {
+                newDistance = element.intersectable().distanceToCollide(this, closestDist,
                         getDirection().dotProduct(toCenter));
                 if (newDistance >= 0 && newDistance < closestDist) {
                     closestDist = newDistance;
-                    closest = element.value();
+                    closest = element.intersectable();
                 }
             }
 
-            if (element.isLast()) {
+            if (/*element.isLast()*/(element = element.next()) == null) {
                 toDistance(closestDist - 0.01);
                 return closest;
             }
-            element = element.next();
+//            element = element.next();
         }
     }
 
     /*
     Problems with old version:
-        Unnecessary value setting (i.e. closestDist = Double.MAX_VALUE)
+        Unnecessary intersectable setting (i.e. closestDist = Double.MAX_VALUE)
         Unnecessary checks (i.e. is first collision distance less than Double.MAX_VALUE, etc.)
      */
 //    public RayIntersectable firstCollision(final RayIntersectableList objectsInField) {
@@ -95,13 +96,13 @@ public class Ray extends VectorLine3D {
 //        for (RayIntersectableList.Element element = objectsInField.getHead();
 //             element != null; element = element.next()) {
 //
-//            toCenter = position.subtract(element.value().getCenter());
+//            toCenter = position.subtract(element.intersectable().getCenter());
 //            amountInDirec = getDirection().dotProduct(toCenter);
-////            if (amountInDirec < 0.5 && toCenter.magnitude() - element.value().getRange() < closestDist) {
-//                newDistance = element.value().distanceToCollide(this, closestDist, amountInDirec);
+////            if (amountInDirec < 0.5 && toCenter.magnitude() - element.intersectable().getRange() < closestDist) {
+//                newDistance = element.intersectable().distanceToCollide(this, closestDist, amountInDirec);
 //                if (newDistance >= 0 && newDistance < closestDist) {
 //                    closestDist = newDistance;
-//                    closest = element.value();
+//                    closest = element.intersectable();
 //                }
 ////            }
 //        }

@@ -28,6 +28,15 @@ public class VectorLine3D {
 
     public void toDistance(double distance) {
         position = position.addMultiplied(direction, distance);
+//        position.x += direction.x * distance;
+//        position.y += direction.y * distance;
+//        position.z += direction.z * distance;
+//        position.magnitude = Double.NaN;
+//                Math.sqrt(
+//                position.x * position.x
+//                        + position.y * position.y
+//                        + position.z * position.z);
+//        System.out.println(position);
     }
 
 

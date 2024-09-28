@@ -30,10 +30,8 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
     public AdditiveRayTracingCamera(
             final Vector3D position, final Vector3D direction,
             final Vector2D imageDimensions,
-            final int maxBounces, final int raysPerPixel,
-            final boolean multiThreaded, final double fieldOfViewDegrees) {
-        super(position, direction, imageDimensions, maxBounces, raysPerPixel,
-                multiThreaded, fieldOfViewDegrees);
+            final int maxBounces, final int raysPerPixel,final double fieldOfViewDegrees) {
+        super(position, direction, imageDimensions, maxBounces, raysPerPixel,fieldOfViewDegrees);
         populateColors();
     }
 
@@ -55,10 +53,8 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
     public AdditiveRayTracingCamera(
             final Vector3D position, final Vector3D direction,
             final Vector2D imageDimensions,
-            final int maxBounces, final int raysPerPixel,
-            final boolean multiThreaded) {
-        super(position, direction, imageDimensions, maxBounces, raysPerPixel,
-                multiThreaded, 60.0);
+            final int maxBounces, final int raysPerPixel) {
+        super(position, direction, imageDimensions, maxBounces, raysPerPixel, 60.0);
         populateColors();
     }
 
@@ -84,10 +80,8 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
     public AdditiveRayTracingCamera(
             final double x, final double y, final double z,
             final Vector3D direction, final Vector2D imageDimensions,
-            final int maxBounces, final int raysPerPixel,
-            final boolean multiThreaded, final double fieldOfViewDegrees) {
-        super(x, y, z, direction, imageDimensions, maxBounces, raysPerPixel,
-                multiThreaded, fieldOfViewDegrees);
+            final int maxBounces, final int raysPerPixel,final double fieldOfViewDegrees) {
+        super(x, y, z, direction, imageDimensions, maxBounces, raysPerPixel, fieldOfViewDegrees);
         populateColors();
     }
 
@@ -113,8 +107,7 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
             final Vector3D direction, final Vector2D imageDimensions,
             final int maxBounces, final int raysPerPixel,
             final boolean multiThreaded) {
-        super(x, y, z, direction, imageDimensions, maxBounces, raysPerPixel,
-                multiThreaded, 60.0);
+        super(x, y, z, direction, imageDimensions, maxBounces, raysPerPixel, 60.0);
         populateColors();
     }
 

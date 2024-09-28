@@ -21,10 +21,10 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
     /*
      * Components:
      */
-    private double x;
-    private double y;
-    private double z;
-    private double magnitude = Double.NaN;
+    public double x;
+    public double y;
+    public double z;
+    public double magnitude = Double.NaN;
 
 
     /*
@@ -174,6 +174,14 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
                 z + other.z * newMagnitude);
     }
 
+    public void addMultipliedMutable(final Vector3D other, final double newMagnitude) {
+        x += other.x * newMagnitude;
+        y += other.y * newMagnitude;
+        z += other.z * newMagnitude;
+        magnitude = Double.NaN;
+//        magnitude = magnitude();
+    }
+
     @Override
     public Vector3D scalarMultiply(final double scalar) {
         return new Vector3D(
@@ -292,7 +300,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
     }
 
     /**
-     * @return a Vector4D with only the component with the largest value
+     * @return a Vector4D with only the component with the largest intersectable
      * preserved, and all others set to 0.
      */
     @Override
@@ -305,7 +313,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
     }
 
     /**
-     * @return a Vector4D with only the component with the smallest value
+     * @return a Vector4D with only the component with the smallest intersectable
      * preserved, and all others set to 0.
      */
     @Override
