@@ -1,7 +1,6 @@
 package gameengine.graphics.raytraceing;
 
 import gameengine.Objects.DirectionalGameObject;
-import gameengine.Objects.objectproperties.HasRenderable;
 import gameengine.Objects.objectproperties.Moveable;
 import gameengine.graphics.Camera;
 import gameengine.graphics.raytraceing.objectgraphics.RayIntersectableList;
@@ -55,11 +54,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      * The number of rays averaged to find each pixel's color.
      */
     private int raysPerPixel;
-    /**
-     * Whether the {@code Camera} should utilize multithreading when rendering
-     * images. Doing so can speed up rendering.
-     */
-    private boolean multiThreaded;
+
     /**
      * The maximum number of times a light ray can bounce before it is declared
      * to never hit a light.
@@ -69,15 +64,11 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      * The time in nanoseconds it took to render the last frame.
      */
     private long renderTime;
-    /**
-     * The target size of the tiles for the image to be broken into for
-     * increased threaded performance.
-     * <p>The actual tile size may end up being different than the set target.
-     */
-    private int targetTileSize;
-    private Vector2D tileDimensions;
-    protected final IntBuffer buffer;
+    protected IntBuffer buffer;
     private double scaleX;
+    private RayIntersectableList objects;
+    private PixelWriter writer;
+    private int numPixels;
 
 
 
@@ -103,14 +94,10 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
     public RayTracedCamera(Vector3D location, Vector3D direction, Vector2D imageDimensions,
                            int maxBounces, int raysPerPixel, double fieldOfViewDegrees) {
         super(location, direction);
-        image = new WritableImage((int) imageDimensions.getX(), (int) imageDimensions.getY());
+        setImage(new WritableImage((int) imageDimensions.getX(), (int) imageDimensions.getY()));
         setFieldOfViewDegrees(fieldOfViewDegrees);
-
-        buffer = IntBuffer.allocate(getWidth() * getHeight() * Integer.BYTES);
         this.maxBounces = maxBounces;
         this.raysPerPixel = raysPerPixel;
-        setTargetTileSize(15 / raysPerPixel);
-        updateScaleX();
     }
 
     /**
@@ -178,8 +165,6 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      * Functionality:
      */
 
-    private RayIntersectableList objects;
-
     public void updateObjects(final Collection<RayTraceable> renderableObjects) {
         objects = new RayIntersectableList(
                 renderableObjects.stream().sorted(Comparator.comparingDouble((RayTraceable obj) -> obj.closestDistTo(getLocation()))).toArray(RayTraceable[]::new), getLocation());
@@ -190,7 +175,8 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      */
     public void renderImage() {
         long startTime = System.nanoTime();
-        renderThreaded(getImage().getPixelWriter(), objects);
+        IntStream.range(0, numPixels).parallel().forEach(pixelIndex -> renderPixel(pixelIndex, objects));
+        updateImage(writer);
         renderTime = System.nanoTime() - startTime;
 
 //        System.out.println("Execution Time: "
@@ -213,20 +199,12 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
 
     }
 
-    private void renderThreaded(final PixelWriter writer,
-                                final RayIntersectableList objects) {
-        IntStream.range(0, getWidth() * getHeight()).parallel().forEach(pixelIndex -> renderPixel(pixelIndex, objects));
-        updateImage(writer);
-    }
-
-
     protected void renderPixel(int pixelIndex, RayIntersectableList objects) {
         buffer.put(
                 pixelIndex,
                 calculatePixelColorInt(rayTo(pixelIndex), objects)
         );
     }
-
 
     protected void updateImage(PixelWriter writer) {
         writer.setPixels(0, 0, getWidth(), getHeight(), PixelFormat.getIntArgbInstance(), buffer, getWidth());
@@ -283,7 +261,6 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
     public void update() {
         if (updateNeeded) {
             renderImage();
-//            renderWithProcessing();
             updateNeeded = false;
         }
     }
@@ -318,22 +295,6 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
         ImageIO.write(SwingFXUtils.fromFXImage(image, null), format, file);
     }
 
-    /**
-     * Applies the {@code Camera}'s post-processing routine to the given
-     * {@link WritableImage}.
-     *
-     * @param image The {@link WritableImage} to apply the post-processing to.
-     * @return The {@link WritableImage} with the {@code Camera}'s
-     * post-processing routine preformed on it.
-     */
-    public WritableImage applyPostProcessing(WritableImage image) {
-        WritableImage currentImage = image;
-        for (PostProcess process : postProcesses) {
-            currentImage = process.process(currentImage);
-        }
-        return currentImage;
-    }
-
 
     /*
      * Utilities:
@@ -352,14 +313,6 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
         raysPerPixel = newRaysPerPixel;
     }
 
-    public boolean isMultiThreaded() {
-        return multiThreaded;
-    }
-
-    public void setMultiThreaded(boolean newMultiThreaded) {
-        multiThreaded = newMultiThreaded;
-    }
-
     public int getMaxBounces() {
         return maxBounces;
     }
@@ -368,44 +321,12 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
         return renderTime;
     }
 
-    public int getTargetTileSize() {
-        return targetTileSize;
-    }
-
-    public void setTargetTileSize(int targetTileSize) {
-        this.targetTileSize = targetTileSize;
-        tileDimensions = new Vector2D(
-                findClosestFactor(getWidth(), targetTileSize),
-                findClosestFactor(getHeight(), targetTileSize));
-    }
-
-    public Vector2D getTileDimensions() {
-        return tileDimensions;
-    }
-
     public void setImage(WritableImage image) {
         this.image = image;
-        tileDimensions = new Vector2D(
-                findClosestFactor(getWidth(), targetTileSize),
-                findClosestFactor(getHeight(), targetTileSize));
         updateScaleX();
-    }
-
-    private static int findClosestFactor(int imageSize, int targetTileSize) {
-        int closestFactor = 0;
-        int minDifference = Integer.MAX_VALUE;
-
-        for (int i = 1; i <= imageSize; i++) {
-            if (imageSize % i == 0) {
-                int difference = Math.abs(targetTileSize - i);
-                if (difference < minDifference) {
-                    minDifference = difference;
-                    closestFactor = i;
-                }
-            }
-        }
-
-        return closestFactor;
+        numPixels = (int) (image.getHeight() * image.getWidth());
+        writer = image.getPixelWriter();
+        buffer = IntBuffer.allocate(numPixels * Integer.BYTES);
     }
 
     public void updateScaleX() {
