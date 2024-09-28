@@ -183,22 +183,23 @@ public class RayTracedCamera extends Camera<RayTraceable> {
         long startTime = System.nanoTime();
         renderThreaded(getImage().getPixelWriter(), objects);
         renderTime = System.nanoTime() - startTime;
+
 //        System.out.println("Execution Time: "
 //                + TimeFormatter.format(renderTime));
 //        System.out.println("Execution Time: "
 //                + TimeConversionFactor.MILLISECOND.convert(renderTime)
 //                + " milliseconds");
 //        System.out.println("rendered");
-//
+
 //        try {
 //            saveToFile("RayTraced_0_1_("
-//                    + (int) getWidth() + "," + (int) getHeight() + ")_"
+//                    + getWidth() + "," + getHeight() + ")_"
 //                    + "rays" + raysPerPixel + "_bounces"
 //                    + maxBounces + ".png");
 //        } catch (IOException e) {
 //            throw new RuntimeException(e);
 //        }
-
+//
 //        System.exit(0);
 
         return getImage();
@@ -241,14 +242,14 @@ public class RayTracedCamera extends Camera<RayTraceable> {
      * @return The average color of each ray to measure based on
      * {@link #raysPerPixel}.
      */
-    protected int calculatePixelColorInt(final LightRay startRay,
-                                            final RayIntersectableList objectsInField) {
+    protected int calculatePixelColorInt(final LightRay startRay, final RayIntersectableList objectsInField) {
         RayTraceable firstCollision = (RayTraceable) startRay.firstCollision(objectsInField);
 
         if (firstCollision == null) {
             return 0;
         }
-        if (firstCollision.getTexture().getColor().equals(Color.BLACK)
+//        if (firstCollision.getTexture().getColor().equals(Color.BLACK)
+        if (firstCollision.getTexture().getColor().getBrightness() < 0.1
                 || firstCollision.getTexture().isLightSource()) {
             return startRay.getReflected(firstCollision).getIncomingLight().oneInt();
         }
