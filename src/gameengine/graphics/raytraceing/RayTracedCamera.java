@@ -19,6 +19,8 @@ import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,8 +73,6 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
     private TraceableObjectList objects;
     private PixelWriter writer;
     private int numPixels;
-//    private
-
 
 
     /*
@@ -180,8 +180,9 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
         long startTime = System.nanoTime();
 
         IntStream.range(0, numPixels).parallel().forEach(pixelIndex ->
-                buffer.put(pixelIndex, calculatePixelColor(rayTo(pixelIndex), objects)));
-        writer.setPixels(0, 0, getWidth(), getHeight(), PixelFormat.getIntArgbInstance(), buffer, getWidth());
+                buffer.put(pixelIndex, calculatePixelColor(rayTo(pixelIndex), objects)));  // Calculate the color at each pixel
+        buffer.rewind();
+        writer.setPixels(0, 0, getWidth(), getHeight(), PixelFormat.getIntArgbInstance(), buffer, getWidth());  // Update image with new pixel data
 
         renderTime = System.nanoTime() - startTime;
 //        printFrameInfo();
@@ -257,12 +258,12 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
         }
     }
 
-    public void displayOn(ImageView view) {
-        view.setImage(getImage());
-    }
-
     public void requestUpdate() {
         updateNeeded = true;
+    }
+
+    public void displayOn(ImageView view) {
+        view.setImage(getImage());
     }
 
     /**
@@ -318,13 +319,16 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
         updateScaleX();
         numPixels = (int) (image.getHeight() * image.getWidth());
         writer = image.getPixelWriter();
-        buffer = IntBuffer.allocate(numPixels * Integer.BYTES);
+        buffer = ByteBuffer.allocateDirect(numPixels * Integer.BYTES)
+                .order(ByteOrder.nativeOrder())
+                .asIntBuffer();//IntBuffer.allocate(numPixels * Integer.BYTES);
     }
 
     public void updateScaleX() {
         scaleX = Math.tan(Math.toRadians(getFieldOfViewDegrees() / 2.0));
     }
-    
+
+
     /*
      * Camera Utilities
      */

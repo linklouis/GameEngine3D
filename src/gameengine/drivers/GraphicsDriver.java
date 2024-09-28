@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class GraphicsDriver {
-    public final int WIDTH, HEIGHT;
     public Color background = Color.BLACK;
     private Pane root;
     private Scene scene;
@@ -29,16 +28,12 @@ public class GraphicsDriver {
      * Construction:
      */
 
-    public GraphicsDriver(int width, int height, RayTracedCamera camera) {
-        WIDTH = width;
-        HEIGHT = height;
+    public GraphicsDriver(RayTracedCamera camera) {
         this.camera = camera;
         view = new ImageView(camera.getImage());
     }
 
-    public GraphicsDriver(int width, int height, Color bgColor, RayTracedCamera camera) {
-        WIDTH = width;
-        HEIGHT = height;
+    public GraphicsDriver(Color bgColor, RayTracedCamera camera) {
         background = bgColor;
         this.camera = camera;
         view = new ImageView(camera.getImage());
