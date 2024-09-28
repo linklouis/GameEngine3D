@@ -15,7 +15,6 @@ import java.util.function.Supplier;
 public abstract class GameDriver extends Application {
     private final List<GameObject> objects = new ArrayList<>();
     private final GraphicsDriver graphicsDriver;
-    private AnimationTimer animationTimer;
     private final String name;
 
     private final long[] frameTimes = new long[100];
@@ -44,8 +43,8 @@ public abstract class GameDriver extends Application {
         stage.setTitle(name);
         initialize();
         graphicsDriver.initialize(stage);
-        animationTimer = setupAnimationTimer();
 
+        AnimationTimer animationTimer = setupAnimationTimer();
         animationTimer.start();
     }
 

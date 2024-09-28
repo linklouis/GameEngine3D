@@ -64,7 +64,6 @@ public abstract class Camera<VisualType extends Renderable> extends DirectionalG
     public Camera(Vector3D location, Vector3D direction, int imageWidth, int imageHeight,
                   double fieldOfViewDegrees) {
         super(location, direction);
-
         image = new WritableImage(imageWidth, imageHeight);
         setFieldOfViewDegrees(fieldOfViewDegrees);
     }
@@ -225,8 +224,4 @@ public abstract class Camera<VisualType extends Renderable> extends DirectionalG
     public void newPostProcess(PostProcess process) {
         getPostProcesses().add(process);
     }
-
-//    public Class<? extends Modifier> getVisualType() {
-//        return visualType;
-//    }
 }

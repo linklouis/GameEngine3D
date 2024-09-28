@@ -792,7 +792,7 @@ public class RayTracing extends GameDriver {
 
     private void measureRender() {
         mainCam.requestUpdate();
-        mainCam.update(getGraphicsDriver().getVisualObjects());
+        mainCam.update();
         if (renders < NUM_TO_TEST) {
             getGraphicsDriver().getCamera().requestUpdate();
             avTime += mainCam.getRenderTime();

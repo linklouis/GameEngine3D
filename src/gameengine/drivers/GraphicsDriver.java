@@ -1,6 +1,7 @@
 package gameengine.drivers;
 
 import gameengine.graphics.Camera;
+import gameengine.graphics.raytraceing.RayTracedCamera;
 import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -21,21 +22,21 @@ public class GraphicsDriver {
 
     private final List<RayTraceable> visualObjects = new ArrayList<>();
     private final ImageView view;
-    private Camera<RayTraceable> camera;
+    private RayTracedCamera camera;
 
 
     /*
      * Construction:
      */
 
-    public GraphicsDriver(int width, int height, Camera<RayTraceable> camera) {
+    public GraphicsDriver(int width, int height, RayTracedCamera camera) {
         WIDTH = width;
         HEIGHT = height;
         this.camera = camera;
         view = new ImageView(camera.getImage());
     }
 
-    public GraphicsDriver(int width, int height, Color bgColor, Camera<RayTraceable> camera) {
+    public GraphicsDriver(int width, int height, Color bgColor, RayTracedCamera camera) {
         WIDTH = width;
         HEIGHT = height;
         background = bgColor;
@@ -59,7 +60,7 @@ public class GraphicsDriver {
      */
 
     public void updateGraphics() {
-        camera.update(visualObjects);
+        camera.update();
     }
 
 
@@ -70,10 +71,6 @@ public class GraphicsDriver {
     public void add(RayTraceable newObject) {
         visualObjects.add(newObject);
         camera.updateObjects(getVisualObjects());
-//        if (camera.canRender(newObject)) {
-//            cameraObjects.add(newObject);
-//        }
-//        cameraObjects = camera.getValidObjects(visualObjects);
     }
 
     public RayTraceable get(int index) {
@@ -84,11 +81,11 @@ public class GraphicsDriver {
         visualObjects.forEach(function);
     }
 
-    public Camera<RayTraceable> getCamera() {
+    public RayTracedCamera getCamera() {
         return camera;
     }
 
-    public void setCamera(Camera<RayTraceable> camera) {
+    public void setCamera(RayTracedCamera camera) {
         this.camera = camera;
     }
 
