@@ -163,7 +163,7 @@ public class AdditiveRayTracingCamera extends RayTracedCamera {
     }
     private final Vector3D[] colors = new Vector3D[getWidth() * getHeight()];
 
-    @Override
+//    @Override
     protected void renderPixel(int pixelIndex, RayIntersectableList objects) {
         calculatePixelColorVector(rayTo(pixelIndex), objects, colors[pixelIndex]);
         buffer.put(pixelIndex, colors[pixelIndex].scalarDivide(numRenders).oneInt());

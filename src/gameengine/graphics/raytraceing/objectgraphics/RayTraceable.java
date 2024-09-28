@@ -34,21 +34,6 @@ public abstract class RayTraceable implements RayIntersectable, Renderable {
      */
 
     public abstract Vector3D[] getVertices();
-//
-//    RayTracingTexture getTexture();
-//
-//    void setTexture(RayTracingTexture texture);
-//
-//    default Color getColor() {
-//        return getTexture().getColor();
-//    }
-//
-//    default Vector3D colorVector() {
-//        return new Vector3D(getTexture().getColor());
-//    }
-//    default void setColor(Color color) {
-//        getTexture().setColor(color);
-//    }
 
     public RayTracingTexture getTexture() {
         return texture;

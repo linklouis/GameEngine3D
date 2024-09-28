@@ -6,6 +6,8 @@ import gameengine.graphics.Camera;
 import gameengine.graphics.raytraceing.objectgraphics.RayIntersectableList;
 import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.graphics.raytraceing.postprocesses.PostProcess;
+import gameengine.utilities.timeformatting.TimeConversionFactor;
+import gameengine.utilities.timeformatting.TimeFormatter;
 import gameengine.utilities.vectormath.Vector2D;
 import gameengine.utilities.vectormath.Vector3D;
 import javafx.embed.swing.SwingFXUtils;
@@ -69,6 +71,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
     private RayIntersectableList objects;
     private PixelWriter writer;
     private int numPixels;
+//    private
 
 
 
@@ -175,39 +178,33 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      */
     public void renderImage() {
         long startTime = System.nanoTime();
-        IntStream.range(0, numPixels).parallel().forEach(pixelIndex -> renderPixel(pixelIndex, objects));
-        updateImage(writer);
-        renderTime = System.nanoTime() - startTime;
 
-//        System.out.println("Execution Time: "
-//                + TimeFormatter.format(renderTime));
-//        System.out.println("Execution Time: "
-//                + TimeConversionFactor.MILLISECOND.convert(renderTime)
-//                + " milliseconds");
-//        System.out.println("rendered");
-
-//        try {
-//            saveToFile("RayTraced_0_1_("
-//                    + getWidth() + "," + getHeight() + ")_"
-//                    + "rays" + raysPerPixel + "_bounces"
-//                    + maxBounces + ".png");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        System.exit(0);
-
-    }
-
-    protected void renderPixel(int pixelIndex, RayIntersectableList objects) {
-        buffer.put(
-                pixelIndex,
-                calculatePixelColorInt(rayTo(pixelIndex), objects)
-        );
-    }
-
-    protected void updateImage(PixelWriter writer) {
+        IntStream.range(0, numPixels).parallel().forEach(pixelIndex ->
+                buffer.put(pixelIndex, calculatePixelColorInt(rayTo(pixelIndex), objects)));
         writer.setPixels(0, 0, getWidth(), getHeight(), PixelFormat.getIntArgbInstance(), buffer, getWidth());
+
+        renderTime = System.nanoTime() - startTime;
+//        printFrameInfo();
+    }
+
+    private void printFrameInfo() {
+        System.out.println("Execution Time: "
+                + TimeFormatter.format(renderTime));
+        System.out.println("Execution Time: "
+                + TimeConversionFactor.MILLISECOND.convert(renderTime)
+                + " milliseconds");
+        System.out.println("rendered");
+
+        try {
+            saveToFile("RayTraced_0_1_("
+                    + getWidth() + "," + getHeight() + ")_"
+                    + "rays" + raysPerPixel + "_bounces"
+                    + maxBounces + ".png");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+//        System.exit(0);
     }
 
     protected LightRay rayTo(final double pixelIndex) {
@@ -218,11 +215,6 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
                         (pixelIndex % getWidth() * 2 / getWidth() - 1) * scaleX,
                         (getHeight() - pixelIndex / getWidth() * 2) * scaleX / getWidth()));
     }
-
-
-    /*
-     * LightRay Tracing:
-     */
 
     /**
      * @return The average color of each ray to measure based on
