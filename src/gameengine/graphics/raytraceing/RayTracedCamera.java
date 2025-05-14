@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -94,7 +95,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      * @param fieldOfViewDegrees The number of degrees in the horizontal field
      *                           of view. Default intersectable: 60.0
      */
-    public RayTracedCamera(Vector3D location, Vector3D direction, Vector2D imageDimensions,
+    public RayTracedCamera(Vector3D location, Vector3D direction, @NotNull Vector2D imageDimensions,
                            int maxBounces, int raysPerPixel, double fieldOfViewDegrees) {
         super(location, direction);
         setImage(new WritableImage((int) imageDimensions.getX(), (int) imageDimensions.getY()));
@@ -168,7 +169,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      * Functionality:
      */
 
-    public void updateObjects(final Collection<RayTraceable> renderableObjects) {
+    public void updateObjects(final @NotNull Collection<RayTraceable> renderableObjects) {
         objects = new TraceableObjectList(
                 renderableObjects.stream().sorted(Comparator.comparingDouble((RayTraceable obj) -> obj.closestDistTo(getLocation()))).toArray(RayTraceable[]::new), getLocation());
     }
@@ -229,7 +230,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      * @return The average color of each ray to measure based on
      * {@link #raysPerPixel}.
      */
-    protected int calculatePixelColor(final LightRay startRay, final TraceableObjectList objectsInField) {
+    protected int calculatePixelColor(final @NotNull LightRay startRay, final TraceableObjectList objectsInField) {
         // All rays from a given pixel will hit the same thing on the first collision, which is found here.
         RayTraceable firstCollidedObject = startRay.firstCollision(objectsInField);
 
@@ -274,7 +275,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
         updateNeeded = true;
     }
 
-    public void displayOn(ImageView view) {
+    public void displayOn(@NotNull ImageView view) {
         view.setImage(getImage());
     }
 
@@ -330,7 +331,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
         return renderTime;
     }
 
-    public void setImage(WritableImage image) {
+    public void setImage(@NotNull WritableImage image) {
         this.image = image;
         updateScaleX();
         numPixels = (int) (image.getHeight() * image.getWidth());

@@ -40,7 +40,7 @@ public class SphereGraphics extends RayTraceable {
      * @return {@code NaN} if never enters range or if collision is behind start.
      * Otherwise, the distance to first hit
      */
-//    @Override
+    @Override
     public double distanceToCollide(Ray lightRay, double curSmallestDist, double amountInDirection) {
 //        double b = -lightRay.getDirection().dotWithSubtracted(lightRay.getPosition(), getCenter());
 //

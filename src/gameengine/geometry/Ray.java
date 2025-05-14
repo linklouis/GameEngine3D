@@ -4,6 +4,7 @@ import gameengine.graphics.raytraceing.LightRay;
 import gameengine.graphics.raytraceing.objectgraphics.TraceableObjectList;
 import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.utilities.vectormath.Vector3D;
+import org.jetbrains.annotations.NotNull;
 
 public class Ray {
     /**
@@ -15,12 +16,12 @@ public class Ray {
      */
     protected Vector3D position;
 
-    public Ray(final Vector3D startPosition, final Vector3D direction) {
+    public Ray(final Vector3D startPosition, final @NotNull Vector3D direction) {
         this.direction = direction.normalize();
         this.position = startPosition;
     }
 
-    public Ray(Ray parent) {
+    public Ray(@NotNull Ray parent) {
         this.direction = parent.getDirection();
         this.position = parent.getPosition();
     }
@@ -33,7 +34,7 @@ public class Ray {
      *                       potentially collide with.
      * @return The closest {@link RayTraceable} the {@code LightRay} can collide with.
      */
-    public RayTraceable firstCollision(final TraceableObjectList objectsInField) {
+    public RayTraceable firstCollision(final @NotNull TraceableObjectList objectsInField) {
         TraceableObjectList.Element element = objectsInField.getHead();
 
         // No objects, return.
@@ -96,7 +97,7 @@ public class Ray {
      *
      * @param collider The {@link RayTraceable} to reflect off of.
      */
-    public void reflect(RayTraceable collider) {
+    public void reflect(@NotNull RayTraceable collider) {
         setDirection(collider.reflection((LightRay) this).direction());
     }
 
@@ -109,7 +110,7 @@ public class Ray {
      * @return A new {@code Ray} representing the current {@code Ray} after
      * reflecting off of {@code collider}.
      */
-    public Ray getReflected(RayTraceable collider) {
+    public Ray getReflected(@NotNull RayTraceable collider) {
         return new Ray(position, collider.reflection((LightRay) this).direction());
     }
 
@@ -139,7 +140,7 @@ public class Ray {
         return direction;
     }
 
-    protected void setDirection(Vector3D direction) {
+    protected void setDirection(@NotNull Vector3D direction) {
         this.direction = direction.normalize();
     }
 

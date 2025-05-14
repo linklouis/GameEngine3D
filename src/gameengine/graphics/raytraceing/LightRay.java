@@ -5,6 +5,7 @@ import gameengine.graphics.raytraceing.objectgraphics.TraceableObjectList;
 import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import gameengine.utilities.vectormath.Vector3D;
 import javafx.scene.paint.Color;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A single ray of light which starts at a point and moves in a direction until
@@ -44,7 +45,7 @@ public class LightRay extends Ray {
         this.color = new Vector3D(color);
     }
 
-    public LightRay(final Vector3D startPosition, final Reflection reflection) {
+    public LightRay(final Vector3D startPosition, final @NotNull Reflection reflection) {
         super(startPosition, reflection.direction());
         this.color = new Vector3D(reflection.color());
     }
@@ -54,20 +55,12 @@ public class LightRay extends Ray {
      * Functionality:
      */
 
-    private static Vector3D sunPos = new Vector3D(2, 0,3).normalize();
-    public static Vector3D getSkyColor(Vector3D dir) {
-//        if (dir.angleInDegreesWith(sunPos) < 4) {
-//            return new Vector3D(Color.LIGHTYELLOW).scalarMultiply(3 * Math.exp(-Math.abs(dir.dotProduct(sunPos))));
-//        }
-        return new Vector3D(Color.SKYBLUE).scalarMultiply(0.3 * (dir.dotProduct(sunPos) + 0.7)).add(new Vector3D(Color.LIGHTYELLOW).scalarMultiply(3 / (1 + Math.pow(dir.angleInDegreesWith(sunPos), 2))));//.scalarMultiply(3 * Math.exp(-Math.abs(dir.angleInDegreesWith(sunPos) / 2))));
-    }
-
     public Vector3D getColor(final int maxBounces, final TraceableObjectList objectsInField, int startingBounce) {
         RayTraceable collision;
 
         for (int bounces = startingBounce; bounces <= maxBounces; bounces++) {
             if ((collision = firstCollision(objectsInField)) == null) {
-                return getIncomingLight();//.add(getSkyColor(getDirection()));
+                return getIncomingLight();
             }
 
             reflect(collision);
@@ -87,7 +80,7 @@ public class LightRay extends Ray {
      * @param collider The {@link RayTraceable} to reflect off of.
      */
     @Override
-    public void reflect(RayTraceable collider) {
+    public void reflect(@NotNull RayTraceable collider) {
         Reflection reflectionDetails = collider.reflection(this);
         setDirection(reflectionDetails.direction());
         incomingLight = updatedIncomingLight(collider.getTexture().getEmission());
@@ -104,7 +97,7 @@ public class LightRay extends Ray {
      * reflecting off of {@code collider}.
      */
     @Override
-    public LightRay getReflected(RayTraceable collider) {
+    public LightRay getReflected(@NotNull RayTraceable collider) {
         Reflection reflectionDetails = collider.reflection(this);
         return new LightRay(new Vector3D(position), reflectionDetails.direction(),
                 reflectionDetails.color(),
