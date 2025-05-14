@@ -10,11 +10,6 @@ import javafx.scene.paint.Color;
 public class TriRectangle extends PolyObject<Tri> {
     private RayTracingTexture texture;
 
-
-    /*
-     * Construction:
-     */
-
     public TriRectangle(double x, double y, double z, Vector3D space,
                         RayTracingTexture texture) {
         super(new Vector3D(x, y, z), generateVertices(x, y, z, space));

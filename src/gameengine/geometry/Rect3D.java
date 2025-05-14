@@ -23,10 +23,10 @@ public record Rect3D(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3, Vecto
     public Rect3D(Vector3D vertex1, Vector3D vertex2, Vector3D vertex3, Vector3D vertex4) {
         this(
                 vertex1, vertex2, vertex3, vertex4,
-                vertex2.subtract(vertex1).unitVector(), vertex4.subtract(vertex1).unitVector(),
-                new Rect(vertex1.projectToPlane(vertex2.subtract(vertex1).unitVector(), vertex4.subtract(vertex1).unitVector()),
-                        vertex3.projectToPlane(vertex2.subtract(vertex1).unitVector(), vertex4.subtract(vertex1).unitVector())),
-                vertex2.subtract(vertex1).crossProduct(vertex4.subtract(vertex1)).unitVector(),
+                vertex2.subtract(vertex1).normalize(), vertex4.subtract(vertex1).normalize(),
+                new Rect(vertex1.projectToPlane(vertex2.subtract(vertex1).normalize(), vertex4.subtract(vertex1).normalize()),
+                        vertex3.projectToPlane(vertex2.subtract(vertex1).normalize(), vertex4.subtract(vertex1).normalize())),
+                vertex2.subtract(vertex1).crossProduct(vertex4.subtract(vertex1)).normalize(),
                 Vector3D.average(vertex1, vertex2, vertex3, vertex4),
                 vertex1.distance(vertex3)
         );

@@ -1,6 +1,5 @@
 package gameengine.drivers;
 
-import gameengine.graphics.Camera;
 import gameengine.graphics.raytraceing.RayTracedCamera;
 import gameengine.graphics.raytraceing.objectgraphics.RayTraceable;
 import javafx.scene.Scene;

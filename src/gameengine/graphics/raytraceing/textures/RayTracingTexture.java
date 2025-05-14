@@ -7,19 +7,20 @@ import javafx.scene.paint.Color;
 
 public abstract class RayTracingTexture {
     private Color color;
+    private double colorBrightness;
     private double emissionStrength;
     private Vector3D emissionColor;
     private Vector3D emission;
 
     public RayTracingTexture(Color color, double emissionStrength, Vector3D emissionColor) {
-        this.color = color;
+        setColor(color);
         this.emissionStrength = emissionStrength;
         this.emissionColor = new Vector3D(emissionColor);
         calculateEmission();
     }
 
     public RayTracingTexture(Color color, double emissionStrength, Color emissionColor) {
-        this.color = color;
+        setColor(color);
         this.emissionStrength = emissionStrength;
         this.emissionColor = new Vector3D(emissionColor);
         calculateEmission();
@@ -29,13 +30,7 @@ public abstract class RayTracingTexture {
                                           final Vector3D surfaceNormal);
 
     public Vector3D scatterRay(Vector3D surfaceNormal) {
-        Vector3D reflection = Vector3D.random(-1, 1);
-//        reflection =;
-        return reflection.add(surfaceNormal.unitVector()).unitVector();
-//        if (reflection.dotProduct(surfaceNormal) > 0) {
-//            reflection = reflection.scalarMultiply(-1);
-//        }
-//        return reflection;
+        return Vector3D.random(-1, 1).add(surfaceNormal.normalize()).normalize();
     }
 
     public Vector3D reflectRay(final Vector3D rayDirection,
@@ -49,6 +44,10 @@ public abstract class RayTracingTexture {
 
     protected Vector3D defaultColorUpdate(Vector3D rayColor) {
         return rayColor.multiplyAcross(colorVector());
+    }
+
+    public boolean shouldReflect() {
+        return colorBrightness > 0.1 /*&& emissionStrength <= 0*/;
     }
 
 
@@ -66,6 +65,7 @@ public abstract class RayTracingTexture {
 
     public void setColor(Color color) {
         this.color = color;
+        colorBrightness = color.getBrightness();
     }
 
     public double getEmissionStrength() {

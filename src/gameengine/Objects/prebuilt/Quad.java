@@ -25,7 +25,7 @@ public class Quad extends Polygon<QuadGraphics> implements HasRenderable<QuadGra
             // If rightVector is too small, use a fallback vector (e.g., Vector3D.I)
             rightVector = Vector3D.I;
         } else {
-            rightVector = rightVector.unitVector();
+            rightVector = rightVector.normalize();
         }
 
         Vector3D upVector = normal.crossProduct(rightVector);
@@ -33,7 +33,7 @@ public class Quad extends Polygon<QuadGraphics> implements HasRenderable<QuadGra
             // If upVector is too small, use a fallback vector (e.g., Vector3D.K)
             upVector = Vector3D.K;
         } else {
-            upVector = upVector.unitVector();
+            upVector = upVector.normalize();
         }
 
         // Adjust width and height vectors according to the orientation
@@ -53,8 +53,8 @@ public class Quad extends Polygon<QuadGraphics> implements HasRenderable<QuadGra
 //    private static Vector3D[] generateVertices(Vector3D position,
 //                                               Vector2D size, Vector3D normal) {
 //        // Calculate the right and up vectors based on the normal
-//        Vector3D rightVector = normal.crossProduct(Vector3D.J).unitVector();
-//        Vector3D upVector = normal.crossProduct(rightVector).unitVector();
+//        Vector3D rightVector = normal.crossProduct(Vector3D.J).normalize();
+//        Vector3D upVector = normal.crossProduct(rightVector).normalize();
 //
 //        // Adjust width and height vectors according to the orientation
 //        Vector3D width = rightVector.scalarMultiply(size.getX());

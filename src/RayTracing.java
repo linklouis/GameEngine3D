@@ -14,7 +14,7 @@ import java.util.function.Function;
 public class RayTracing extends GameDriver {
     private int renders = 0;
     private long avTime = 0;
-    private final int NUM_TO_TEST = 8;
+    private final int NUM_TO_TEST = 1;
     private final double PERCENT_TO_TAKE = 0.4;
     private long minTime = Long.MAX_VALUE;
     private RayTracedCamera mainCam;
@@ -27,8 +27,8 @@ public class RayTracing extends GameDriver {
     public RayTracing() {
         super("LightRay Tracing", new GraphicsDriver(
                         new RayTracedCamera(-2, -10, -10, new Vector3D(0.8, 3, 1.8),
-                                new Vector2D(/*3840, 2160*//*2000, 2000*//*1000, 1000*/700, 700/*1280, 720*//*1920.0, 1080.0*/),
-                                10, 10, 70 /*180*/)));
+                                new Vector2D(/*3840, 2160*//*5000, 5000*//*7000, 7000*//*1000, 1000*/700, 700/*1280, 720*//*1920.0, 1080.0*/),
+                                10, 50, 70 /*180*/)));
     }
 
     public static void main(String[] args) {
@@ -38,8 +38,7 @@ public class RayTracing extends GameDriver {
     @Override
     public void initialize() {
         System.out.println(java.time.LocalDateTime.now());
-        mainCam = (RayTracedCamera) getGraphicsDriver().getCamera();
-//        mainCam.newPostProcess(new FillIn());
+        mainCam = getGraphicsDriver().getCamera();
         mainCam.setDirection(new Vector3D(1, 4, 3));
 
 //        colorSpace();
@@ -47,9 +46,13 @@ public class RayTracing extends GameDriver {
 //        ballSubsurfaceTests();
 //        ballReflectionTestsInfinite();
 //        sphereDistTest();
-        setupScene1();
+//        setupScene1();
 //        scene1Subsurface();
 //        setupGrassScene();
+
+
+//        setupScene1Lightbouncer();
+        infinityRoomSphereAndCube();
 
 //        initDebugVisuals();
 
@@ -107,7 +110,7 @@ public class RayTracing extends GameDriver {
     }
 
     private void setupScene1() {
-        TextureHelper.setReflectivity(0.5);
+        TextureHelper.setReflectivity(0.7);
         mainCam.setLocation(mainCam.getLocation().add(mainCam.getDirection().scalarMultiply(-2.5)));
 
         new QuadRectangle(-1, -2, -3, new Vector3D(2,2, 2),
@@ -121,6 +124,109 @@ public class RayTracing extends GameDriver {
                 TextureHelper.newReflecting(Color.BROWN)));
 
         newObject(new Sphere(-10, 2, -10, 7, new Metallic(Color.BLACK, 3, Color.WHITE, 0)));
+    }
+
+    private void setupScene1Lightbouncer() {
+        TextureHelper.setReflectivity(0.7);
+        mainCam.setLocation(mainCam.getLocation().add(mainCam.getDirection().scalarMultiply(-2.5)));
+
+        new QuadRectangle(-1, -2, -3, new Vector3D(2,2, 2),
+//                TextureHelper.newReflecting(Color.AZURE)
+                new MatteSubsurface(Color.AZURE, 0, 0.99, 0.8)
+        ).initiate(this);
+
+        newObject(new Sphere(3, -1, -2, 2,
+//                TextureHelper.newReflecting(Color.AQUA)
+                new MatteSubsurface(Color.AQUA, 0, 0.99, 0.8)
+//                new Mirrored(Color.WHITE, 0, 1, 0)
+        ));
+        newObject(new Sphere(-1, 2, -3, 3,
+//                TextureHelper.newReflecting(Color.GREEN)
+        new MatteSubsurface(Color.GREEN, 0, 0.99, 0.8)
+        ));
+        newObject(new Sphere(0, 0, 100, 100,
+//                TextureHelper.newReflecting(Color.BROWN)
+                new MatteSubsurface(Color.BROWN, 0, 0.9, 0.8)
+        ));
+
+        newObject(new Sphere(-10, 2, -10, 7, new Metallic(Color.BLACK, 3, Color.WHITE, 0)));
+//        TextureHelper.setReflectivity(0);
+        //PLANE LIGHT
+//        newObject(new Quad(
+//                new Vector3D(-10, 2, -10).subtract(new Vector3D(-1, -2, -3).subtract(new Vector3D(-10, 2, -10)).scalarMultiply(2)/*mainCam.getDirection().scalarMultiply(11)*/),
+////                new Vector3D(-10, 2, -10),
+//                new Vector2D(100, 100), new Vector3D(-1, -2, -3).subtract(new Vector3D(-10, 2, -10)),
+////                TextureHelper.newReflecting(Color.WHITE)
+//                new RoughMirror(Color.WHITE, 1, 0, 1)
+//        ));
+
+//        newObject(new Quad(
+//                new Vector3D(-10, 2, -10).subtract(new Vector3D(-1, -2, -3).subtract(new Vector3D(-10, 2, -10)).scalarMultiply(4)/*mainCam.getDirection().scalarMultiply(11)*/),
+////                new Vector3D(-10, 2, -10),
+//                new Vector2D(100, 100), new Vector3D(-1, -2, -3).subtract(new Vector3D(-10, 2, -10)),
+////                TextureHelper.newReflecting(Color.WHITE)
+//                new RoughMirror(Color.WHITE, 0, 0, 0)
+//        ));
+
+//        newObject(new Quad(mainCam.getLocation().subtract(new Vector3D(-1, -2, -3).subtract(mainCam.getLocation()).atMagnitude(100)/*mainCam.getDirection().scalarMultiply(11)*/), new Vector2D(200, 200),
+////                new Vector3D(0.7844645405527366, -0.7844645405527362, 0.7844645405527362),
+//                mainCam.getDirection(),
+////                TextureHelper.newReflecting(Color.WHITE)
+//                new RoughMirror(Color.WHITE, 0, 0, 0)
+//        ));
+//
+//        newObject(new Quad(mainCam.getLocation().add(new Vector3D(1, -4, 3).atMagnitude(100)/*mainCam.getDirection().scalarMultiply(11)*/), new Vector2D(1000, 1000),
+//                new Vector3D(-1, 4, 3),
+////                TextureHelper.newReflecting(Color.WHITE)
+//                new RoughMirror(Color.WHEAT, 0, 1, 1)
+//        ));
+
+//        newObject(new Quad(mainCam.getLocation().add(mainCam.getDirection()).atMagnitude(6), new Vector2D(5, 5),
+//                mainCam.getDirection(),
+//                new RoughMirror(Color.WHITE, 0, 1, 1)
+//        ));
+
+//        newObject(new Quad(new Vector3D(100, 0, 0), new Vector2D(2000, 2000),
+//                new Vector3D(1, 0, 0),
+//                new Metallic(Color.WHITE, 0, 0, 0)
+//        ));
+
+//        setupBoundingBox(200);
+
+
+//        mainCam.setDirection(new Vector3D(-10, 2, -10));
+//        mainCam.setLocation(mainCam.getLocation().subtract(new Vector3D(-10, 2, -10).atMagnitude(5)));
+//        System.out.println(mainCam.getDirection().crossProduct(new Vector3D(-1, -2, -3).subtract(mainCam.getLocation())));
+    }
+
+    private void infinityRoomSphereAndCube() {
+        mainCam.setLocation(new Vector3D(0,0,1));
+        mainCam.setDirection(new Vector3D(1, 0, 0));
+
+//        newObject(new Sphere(mainCam.getLocation().subtract(mainCam.getDirection().scalarMultiply(5)), 1,
+//                new MatteSubsurface(Color.WHITE, 10, 0.8, 0)));
+
+        newObject(new Sphere(10, -3, 0, 1,
+                new MatteSubsurface(Color.STEELBLUE, 0.5, Color.STEELBLUE, 1, 0.8)));
+        new QuadRectangle(10 - 1.5/2, 3-1.5/2, -1.5/2, new Vector3D(1.5,1.5,1.5),
+                new MatteSubsurface(Color.BROWN, 0.3, Color.BROWN, 1, 0.9)).initiate(this);
+
+//        setupBoundingBox(25, new MatteSubsurface(Color.GREEN, 0, 1, 0.3));
+
+        double wallSize = 25;
+        double hWallSize = wallSize / 2;
+//        newObject(new Quad(new Vector3D(hWallSize, 0, 0), new Vector2D(wallSize, wallSize), new Vector3D(1, 0, 0), new MatteSubsurface(Color.RED, 0, 1, 0.3)));
+//        newObject(new Quad(new Vector3D(-hWallSize, 0, 0), new Vector2D(wallSize, wallSize), new Vector3D(1, 0, 0), new MatteSubsurface(Color.GREEN, 0, 1, 0.3)));
+//        newObject(new Quad(new Vector3D(0, hWallSize, 0), new Vector2D(wallSize, wallSize), new Vector3D(0, 1, 0), new MatteSubsurface(Color.BLUE, 0, 1, 0.3)));
+//        newObject(new Quad(new Vector3D(0, -hWallSize, 0), new Vector2D(wallSize, wallSize), new Vector3D(0, 1, 0), new MatteSubsurface(Color.RED, 0, 1, 0.3)));
+//        newObject(new Quad(new Vector3D(0, 0, hWallSize), new Vector2D(wallSize, wallSize), new Vector3D(0, 0, 1), new MatteSubsurface(Color.GREEN, 0, 1, 0.3)));
+//        newObject(new Quad(new Vector3D(0, 0, -hWallSize), new Vector2D(wallSize, wallSize), new Vector3D(0, 0, 1), new MatteSubsurface(Color.BLUE, 0, 1, 0.3)));
+        newObject(new Quad(new Vector3D(15, 0, 0), new Vector2D(wallSize, wallSize), new Vector3D(1, 0, 0), new Mirrored(Color.RED, 0, 0.99, 0.8)));
+        newObject(new Quad(new Vector3D(-1, 0, 0), new Vector2D(25.0/2 + 10, wallSize), new Vector3D(1, 0, 0), new Mirrored(Color.GREEN, 0, 0.99, 0.8)));
+        newObject(new Quad(new Vector3D(0, hWallSize, 0), new Vector2D(25.0/2 + 10, wallSize), new Vector3D(0, 1, 0), new Mirrored(Color.BLUE, 0, 0.99, 0.8)));
+        newObject(new Quad(new Vector3D(0, -hWallSize, 0), new Vector2D(25.0/2 + 10, wallSize), new Vector3D(0, 1, 0), new Mirrored(Color.RED, 0, 0.99, 0.8)));
+        newObject(new Quad(new Vector3D(0, 0, hWallSize), new Vector2D(25.0/2 + 10, wallSize), new Vector3D(0, 0, 1), new Mirrored(Color.GREEN, 0, 0.99, 0.8)));
+        newObject(new Quad(new Vector3D(0, 0, -hWallSize), new Vector2D(25.0/2 + 10, wallSize), new Vector3D(0, 0, 1), new Mirrored(Color.BLUE, 0, 0.99, 0.8)));
     }
 
     private void scene1Subsurface() {
@@ -589,12 +695,18 @@ public class RayTracing extends GameDriver {
 
     private void setupBoundingBox(double wallSize, RayTracingTexture texture) {
         double hWallSize = wallSize / 2;
-        new RectPlane(hWallSize, -hWallSize, -hWallSize, new Vector3D(0, wallSize, wallSize), texture).initiate(this);
-        new RectPlane(-hWallSize, -hWallSize, -hWallSize, new Vector3D(0, wallSize, wallSize), texture).initiate(this);
-        new RectPlane(-hWallSize, -hWallSize, -hWallSize, new Vector3D(wallSize, 0, wallSize), texture).initiate(this);
-        new RectPlane(-hWallSize, hWallSize, -hWallSize, new Vector3D(wallSize, 0, wallSize), texture).initiate(this);
-        new RectPlane(-hWallSize, -hWallSize, -hWallSize, new Vector3D(wallSize, wallSize, 0), texture).initiate(this);
-        new RectPlane(-hWallSize, -hWallSize, hWallSize, new Vector3D(wallSize, wallSize, 0), texture).initiate(this);
+//        new RectPlane(hWallSize, -hWallSize, -hWallSize, new Vector3D(0, wallSize, wallSize), texture).initiate(this);
+//        new RectPlane(-hWallSize, -hWallSize, -hWallSize, new Vector3D(0, wallSize, wallSize), texture).initiate(this);
+//        new RectPlane(-hWallSize, -hWallSize, -hWallSize, new Vector3D(wallSize, 0, wallSize), texture).initiate(this);
+//        new RectPlane(-hWallSize, hWallSize, -hWallSize, new Vector3D(wallSize, 0, wallSize), texture).initiate(this);
+//        new RectPlane(-hWallSize, -hWallSize, -hWallSize, new Vector3D(wallSize, wallSize, 0), texture).initiate(this);
+//        new RectPlane(-hWallSize, -hWallSize, hWallSize, new Vector3D(wallSize, wallSize, 0), texture).initiate(this);
+        newObject(new Quad(new Vector3D(hWallSize, 0, 0), new Vector2D(wallSize, wallSize), new Vector3D(1, 0, 0), texture));
+        newObject(new Quad(new Vector3D(-hWallSize, 0, 0), new Vector2D(wallSize, wallSize), new Vector3D(1, 0, 0), texture));
+        newObject(new Quad(new Vector3D(0, hWallSize, 0), new Vector2D(wallSize, wallSize), new Vector3D(0, 1, 0), texture));
+        newObject(new Quad(new Vector3D(0, -hWallSize, 0), new Vector2D(wallSize, wallSize), new Vector3D(0, 1, 0), texture));
+        newObject(new Quad(new Vector3D(0, 0, hWallSize), new Vector2D(wallSize, wallSize), new Vector3D(0, 0, 1), texture));
+        newObject(new Quad(new Vector3D(0, 0, -hWallSize), new Vector2D(wallSize, wallSize), new Vector3D(0, 0, 1), texture));
     }
 
     private void initDebugVisuals() {
@@ -832,6 +944,8 @@ public class RayTracing extends GameDriver {
                 Math.cos(Math.PI - distance/length)
         );
     }
+
+    double xDir = 1;
     @Override
     public void updateGame() {
 //        if (mainCam.getFieldOfViewDegrees() < 180) {
@@ -845,8 +959,18 @@ public class RayTracing extends GameDriver {
 //        mainCam.setDirection(spiral(Math.TAU, angle));
 //        angle += 0.1;
 
-        mainCam.setLocation(mainCam.getLocation().add(new Vector3D(0, 0.15, 0)));
+//        mainCam.setLocation(mainCam.getLocation().add(new Vector3D(0, 0.15, 0)));
+
+
+//        mainCam.setDirection(new Vector3D(xDir, 4, 3));
+//        xDir -= 0.1;
+//        System.out.println(xDir);
+
+//        mainCam.setMaxBounces(mainCam.getMaxBounces() + 1);
 //        mainCam.setDirection(mainCam.getDirection().add(new Vector3D(0, -0.01, 0)));
+
+
+
 //        for (GraphicsObject3D object : getGraphicsDriver().getCameraObjects()) {
 //                InPlane3D loc = object.getFromParent(InPlane3D.class);
 //                loc.updateLocation(Vector3D.random(0, 0.3));
@@ -874,7 +998,7 @@ public class RayTracing extends GameDriver {
                             * mainCam.getRaysPerPixel())
                     + "\nMax bounces: " + mainCam.getMaxBounces()
                     + "\nAverage render time: " + TimeFormatter.format(avTime)
-                    + "\nMin render time: " + TimeFormatter.format(minTime)
+                    + "\nMin render time: " + /*TimeFormatter.format(*/minTime/*)*/
             );
             System.out.println(
                     mainCam.getWidth() + "\t"

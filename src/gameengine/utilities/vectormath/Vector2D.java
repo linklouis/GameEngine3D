@@ -133,7 +133,7 @@ public class Vector2D implements Vector<Vector2D> {
     }
 
     @Override
-    public Vector2D unitVector() {
+    public Vector2D normalize() {
         double magnitude = magnitude();
         return new Vector2D(
                 getX() / magnitude,

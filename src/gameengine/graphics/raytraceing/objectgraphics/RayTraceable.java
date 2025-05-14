@@ -9,16 +9,12 @@ import gameengine.utilities.vectormath.Vector3D;
 import javafx.scene.paint.Color;
 
 public abstract class RayTraceable implements Renderable {
-    private RayTracingTexture texture = null;
-
-
-    /*
-     * Construction:
-     */
+    private RayTracingTexture texture;
 
     public RayTraceable(RayTracingTexture texture) {
         this.texture = texture;
     }
+
 
     /*
      * Functionality:
@@ -61,7 +57,6 @@ public abstract class RayTraceable implements Renderable {
     }
 
     public double closestDistTo(Vector3D point) {
-//        System.out.println(getCenter().distance(point) + ", " + getRange());
         return getCenter().distance(point) - getRange();
     }
 
@@ -84,9 +79,6 @@ public abstract class RayTraceable implements Renderable {
         return getTexture().getColor();
     }
 
-    public Vector3D colorVector() {
-        return new Vector3D(getTexture().getColor());
-    }
     public void setColor(Color color) {
         getTexture().setColor(color);
     }

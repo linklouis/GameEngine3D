@@ -63,7 +63,7 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      * The maximum number of times a light ray can bounce before it is declared
      * to never hit a light.
      */
-    private final int maxBounces;
+    private int maxBounces;
     /**
      * The time in nanoseconds it took to render the last frame.
      */
@@ -173,15 +173,17 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
                 renderableObjects.stream().sorted(Comparator.comparingDouble((RayTraceable obj) -> obj.closestDistTo(getLocation()))).toArray(RayTraceable[]::new), getLocation());
     }
 
+
     /**
      * Render a ray-traced image of the known objects.
      */
     public void renderImage() {
         long startTime = System.nanoTime();
 
-        IntStream.range(0, numPixels).parallel().forEach(pixelIndex ->
-                buffer.put(pixelIndex, calculatePixelColor(rayTo(pixelIndex), objects)));  // Calculate the color at each pixel
-        buffer.rewind();
+        IntStream.range(0, numPixels).parallel().forEach(pixelIndex -> //renderPixel(pixelIndex, objects)
+                buffer.put(pixelIndex, calculatePixelColor(rayTo(pixelIndex), objects))
+        );  // Calculate the color at each pixel
+//        buffer.rewind();
         writer.setPixels(0, 0, getWidth(), getHeight(), PixelFormat.getIntArgbInstance(), buffer, getWidth());  // Update image with new pixel data
 
         renderTime = System.nanoTime() - startTime;
@@ -205,6 +207,12 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
             throw new RuntimeException(e);
         }
 
+//        try {
+//            Thread.sleep(100);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+
 //        System.exit(0);
     }
 
@@ -222,23 +230,27 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
      * {@link #raysPerPixel}.
      */
     protected int calculatePixelColor(final LightRay startRay, final TraceableObjectList objectsInField) {
-        RayTraceable firstCollision = startRay.firstCollision(objectsInField);
+        // All rays from a given pixel will hit the same thing on the first collision, which is found here.
+        RayTraceable firstCollidedObject = startRay.firstCollision(objectsInField);
 
-        if (firstCollision == null) {
+        if (firstCollidedObject == null) {
+            // Never hit a first object, all rays go on forever
             return 0;
         }
-        if (firstCollision.getTexture().getColor().getBrightness() < 0.1
-                || firstCollision.getTexture().isLightSource()) {
-            return startRay.getReflected(firstCollision).getIncomingLight().oneInt();
+        if (!firstCollidedObject.getTexture().shouldReflect()) {
+            // All rays hit a very dark or light emitting object (meaning they don't bounce off)
+            return startRay.getReflected(firstCollidedObject).getIncomingLight().oneInt();
         }
 
         Vector3D averageColor = new Vector3D(0);
         for (int i = 0; i < raysPerPixel; i++) {
+            // Track the life of each ray that bounces off of the first collision, finding its final color.
             averageColor.addMutable(
-                            startRay.getReflected(firstCollision).getColor(
-                            maxBounces, objectsInField, 2));
+                    startRay.getReflected(firstCollidedObject)
+                            .getColor(maxBounces, objectsInField, 2));
         }
 
+        // Find and return the average color of all light rays hitting this pixel
         return averageColor.scalarDivide(raysPerPixel).oneInt();
     }
     
@@ -303,11 +315,15 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
     }
 
     public void setRaysPerPixel(final int newRaysPerPixel) {
-        raysPerPixel = newRaysPerPixel;
+       this.raysPerPixel = newRaysPerPixel;
     }
 
     public int getMaxBounces() {
         return maxBounces;
+    }
+
+    public void setMaxBounces(int maxBounces) {
+        this.maxBounces = maxBounces;
     }
 
     public long getRenderTime() {
@@ -319,9 +335,11 @@ public class RayTracedCamera extends DirectionalGameObject implements Moveable {
         updateScaleX();
         numPixels = (int) (image.getHeight() * image.getWidth());
         writer = image.getPixelWriter();
-        buffer = ByteBuffer.allocateDirect(numPixels * Integer.BYTES)
+        buffer =
+                ByteBuffer.allocateDirect(numPixels * Integer.BYTES)
                 .order(ByteOrder.nativeOrder())
-                .asIntBuffer();//IntBuffer.allocate(numPixels * Integer.BYTES);
+                .asIntBuffer();
+        //IntBuffer.allocate(numPixels * Integer.BYTES);
     }
 
     public void updateScaleX() {

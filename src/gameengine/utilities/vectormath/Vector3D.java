@@ -265,7 +265,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
     }
 
     @Override
-    public Vector3D unitVector() {
+    public Vector3D normalize() {
         return new Vector3D(
                 x / magnitude(),
                 y / magnitude(),
@@ -397,8 +397,8 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
 //                dotProduct(planeX),
 //                dotProduct(planeY)
 //        );
-//        planeX = planeX.unitVector();
-//        planeY = planeY.unitVector();
+//        planeX = planeX.normalize();
+//        planeY = planeY.normalize();
         return new Vector2D(
                 x * planeX.x + y * planeX.y + z * planeX.z,
                 x * planeY.x + y * planeY.y + z * planeY.z
@@ -406,8 +406,8 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
     }
 
     public Vector2D projectToPlane(Vector3D planeX, Vector3D planeY, Vector3D direction, double distance) {
-//        planeX = planeX.unitVector();
-//        planeY = planeY.unitVector();
+//        planeX = planeX.normalize();
+//        planeY = planeY.normalize();
         return new Vector2D(
                 (x + direction.x * distance) * planeX.x
                         + (y + direction.y * distance) * planeX.y
@@ -431,7 +431,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
                 ThreadLocalRandom.current().nextDouble(-1, 1),
                 ThreadLocalRandom.current().nextDouble(-1, 1),
                 ThreadLocalRandom.current().nextDouble(-1, 1)
-        ).unitVector();
+        ).normalize();
     }
 
     public static Vector3D randomFlat(Vector3D model, double range) {
@@ -439,7 +439,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
                 ThreadLocalRandom.current().nextDouble(model.x - range, model.x + range),
                 ThreadLocalRandom.current().nextDouble(model.y - range, model.y + range),
                 ThreadLocalRandom.current().nextDouble(model.z - range, model.z + range)
-        ).unitVector();
+        ).normalize();
     }
 
     public static Vector3D random(Vector3D normal) {
@@ -447,7 +447,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
                 ThreadLocalRandom.current().nextDouble(-1, 1),
                 ThreadLocalRandom.current().nextDouble(-1, 1),
                 ThreadLocalRandom.current().nextDouble(-1, 1)
-        ).add(normal).unitVector();
+        ).add(normal).normalize();
     }
 
     public static Vector3D random(double min, double max) {
@@ -467,7 +467,7 @@ public class Vector3D implements Vector<Vector3D>, Comparable<Vector3D> {
                 ThreadLocalRandom.current().nextGaussian(model.x, range),
                 ThreadLocalRandom.current().nextGaussian(model.y, range),
                 ThreadLocalRandom.current().nextGaussian(model.z, range)
-        ).unitVector();
+        ).normalize();
     }
 
     public Vector3D blendWithA(Vector3D other, double interpolationStrength) {

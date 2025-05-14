@@ -16,7 +16,7 @@ public class Ray {
     protected Vector3D position;
 
     public Ray(final Vector3D startPosition, final Vector3D direction) {
-        this.direction = direction.unitVector();
+        this.direction = direction.normalize();
         this.position = startPosition;
     }
 
@@ -140,7 +140,7 @@ public class Ray {
     }
 
     protected void setDirection(Vector3D direction) {
-        this.direction = direction.unitVector();
+        this.direction = direction.normalize();
     }
 
     public Vector3D getPosition() {

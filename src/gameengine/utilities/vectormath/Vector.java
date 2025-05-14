@@ -22,7 +22,7 @@ public interface Vector<T extends Vector<T>> {
 
     double magnitude();
 
-    T unitVector();
+    T normalize();
 
     T atMagnitude(double newMagnitude);
 

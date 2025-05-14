@@ -12,27 +12,15 @@ public class Sphere extends GameObject implements HasRenderable<SphereGraphics> 
     private SphereGraphics graphics;
     public Sphere(double x, double y, double z, double r, RayTracingTexture texture) {
         this(new Vector3D(x, y, z), r, texture);
-//        get(SphereCollider.class).instantiate(this, r);
-//        get(InPlane3D.class).instantiate(this, x, y, z);
-//        get(SphereGraphics.class).instantiate(this, r, texture);
-//        get(Visual3D.class).instantiate(this, get(SphereGraphics.class));
     }
 
     public Sphere(Vector3D position, double r, RayTracingTexture texture) {
         super(position);
         setRenderable(new SphereGraphics(r, texture, this::getLocation));
-//        get(SphereCollider.class).instantiate(this, r);
-//        get(InPlane3D.class).instantiate(this, position);
-//        get(SphereGraphics.class).instantiate(this, r, texture);
-//        get(Visual3D.class).instantiate(this, get(SphereGraphics.class));
     }
 
     public Sphere(double x, double y, double z, double r, Color color, boolean isLightSource) {
         this(new Vector3D(x, y, z), r, new Metallic(color, isLightSource ? 1 : 0, 0));
-//        get(SphereCollider.class).instantiate(this, r);
-//        get(InPlane3D.class).instantiate(this, x, y, z);
-//        get(SphereGraphics.class).instantiate(this, r, new Metallic(color, isLightSource ? 1 : 0, 0));
-//        get(Visual3D.class).instantiate(this, get(SphereGraphics.class));
     }
 
     @Override

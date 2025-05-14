@@ -8,16 +8,16 @@ public class DirectionalGameObject extends GameObject implements Directional {
 
     public DirectionalGameObject(Vector3D location, Vector3D direction) {
         super(location);
-        this.direction = direction.unitVector();
+        this.direction = direction.normalize();
     }
 
     public DirectionalGameObject(double x, double y, double z, Vector3D direction) {
-        this(new Vector3D(x, y, z), direction.unitVector());
+        this(new Vector3D(x, y, z), direction.normalize());
     }
 
     @Override
     public void setDirection(Vector3D newDirection) {
-        this.direction = newDirection.unitVector();
+        this.direction = newDirection.normalize();
     }
 
     @Override

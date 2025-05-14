@@ -20,7 +20,7 @@ public class Metallic extends RayTracingTexture {
      * The likelihood for a {@code LightRay} to reflect.
      * <p></p>
      * Range: [0, 1]<p>
-     * 2: All {@code Rays} scatter.</p>
+     * 0: All {@code Rays} scatter.</p>
      * 1: All {@code Rays} reflect.
      */
     private final double smoothness;
